@@ -1,0 +1,101 @@
+{
+  "identifier": "run.vineyard.typepacks.geo",
+  "content_type": "vineyard:typepack",
+  "version": "1.0.0",
+  "name": "Geospatial",
+  "description": "Places and physical context — locations with coordinates, postal addresses, and facilities — to anchor the 'where' of an investigation.",
+  "authors": [{ "name": "VINEYARD.RUN", "url": "https://vineyard.run" }],
+  "license": "Apache-2.0",
+  "distribution": {
+    "kind": "git",
+    "repository": "https://github.com/vineyard-run/typepacks",
+    "ref": "v1.0.0",
+    "path": "typepacks/geo.json"
+  },
+  "marketing_url": "https://vineyard.run/typepacks/geo",
+  "thumbnail_url": "https://vineyard.run/typepacks/geo/icon.png",
+  "types": [
+    {
+      "category": "geo",
+      "name": "location",
+      "display_name": "Location",
+      "description": "A named geographic location with optional coordinates.",
+      "label_property": "name",
+      "icon": "map-pin",
+      "color": "#34d399",
+      "properties": {
+        "name": { "type": "string", "description": "Place name.", "optional": false },
+        "latitude": { "type": "number", "description": "Latitude in decimal degrees.", "optional": true, "validator": { "min": -90, "max": 90 } },
+        "longitude": { "type": "number", "description": "Longitude in decimal degrees.", "optional": true, "validator": { "min": -180, "max": 180 } },
+        "city": { "type": "string", "description": "City.", "optional": true },
+        "region": { "type": "string", "description": "State / region.", "optional": true },
+        "country": { "type": "string", "description": "Country.", "optional": true }
+      }
+    },
+    {
+      "category": "geo",
+      "name": "address",
+      "display_name": "Address",
+      "description": "A postal / street address.",
+      "label_property": "formatted_address",
+      "icon": "map",
+      "color": "#2dd4bf",
+      "properties": {
+        "formatted_address": { "type": "string", "description": "Full formatted address.", "optional": false },
+        "street": { "type": "string", "description": "Street line.", "optional": true },
+        "city": { "type": "string", "description": "City.", "optional": true },
+        "postal_code": { "type": "string", "description": "Postal / ZIP code.", "optional": true },
+        "country": { "type": "string", "description": "Country.", "optional": true }
+      }
+    },
+    {
+      "category": "geo",
+      "name": "facility",
+      "display_name": "Facility",
+      "description": "A physical site such as an office, datacenter, or residence.",
+      "label_property": "name",
+      "icon": "factory",
+      "color": "#14b8a6",
+      "properties": {
+        "name": { "type": "string", "description": "Facility name.", "optional": false },
+        "facility_type": {
+          "type": "enum",
+          "description": "Kind of facility.",
+          "optional": true,
+          "enum": ["office", "datacenter", "residence", "warehouse", "government", "military", "other"]
+        },
+        "operator": { "type": "string", "description": "Operating organization.", "optional": true }
+      }
+    }
+  ],
+  "edge_types": [
+    {
+      "category": "geo",
+      "name": "located_at",
+      "label": "located at",
+      "display_name": "Located At",
+      "description": "Any entity is located at a place, address, or facility.",
+      "from": ["*"],
+      "to": ["geo.location", "geo.address", "geo.facility"]
+    },
+    {
+      "category": "geo",
+      "name": "located_in",
+      "label": "located in",
+      "display_name": "Located In",
+      "description": "An address or facility is located within a broader location.",
+      "from": ["geo.address", "geo.facility"],
+      "to": ["geo.location"]
+    },
+    {
+      "category": "geo",
+      "name": "near",
+      "label": "near",
+      "display_name": "Near",
+      "description": "Two locations are geographically near each other.",
+      "directed": false,
+      "from": ["geo.location"],
+      "to": ["geo.location"]
+    }
+  ]
+}
