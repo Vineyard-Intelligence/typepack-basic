@@ -1,0 +1,317 @@
+{
+  "identifier": "run.vineyard.typepacks.infrastructure",
+  "content_type": "vineyard:typepack",
+  "version": "1.1.0",
+  "name": "Infrastructure",
+  "description": "Network-infrastructure OSINT entities (IP addresses, domains, URLs, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates) and the relationships between them.",
+  "authors": [{ "name": "VINEYARD.RUN", "url": "https://vineyard.run" }],
+  "license": "Apache-2.0",
+  "distribution": {
+    "kind": "git",
+    "repository": "https://github.com/vineyard-run/typepacks",
+    "ref": "v1.1.0",
+    "path": "typepacks/infrastructure.json"
+  },
+  "marketing_url": "https://vineyard.run/typepacks/infrastructure",
+  "thumbnail_url": "https://vineyard.run/typepacks/infrastructure/icon.png",
+  "types": [
+    {
+      "category": "infrastructure",
+      "name": "ip_address",
+      "display_name": "IP Address",
+      "description": "An IPv4 or IPv6 network address with geolocation and ASN context.",
+      "label_property": "ip_address",
+      "icon": "network",
+      "color": "#60a5fa",
+      "properties": {
+        "ip_address": {
+          "type": "ip",
+          "description": "The IP address in dotted-quad (IPv4) or colon-hex (IPv6) form.",
+          "optional": false,
+          "validator": { "format": "ip" }
+        },
+        "version": {
+          "type": "enum",
+          "description": "IP protocol version.",
+          "optional": true,
+          "enum": ["ipv4", "ipv6"]
+        },
+        "country_code": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 country code of the geolocation.",
+          "optional": true,
+          "validator": { "regex": "^[A-Z]{2}$" }
+        },
+        "asn": { "type": "string", "description": "Autonomous System Number that announces this address (e.g. AS13335).", "optional": true },
+        "organization": { "type": "string", "description": "Owning or hosting organization.", "optional": true },
+        "reverse_dns": { "type": "string", "description": "PTR / reverse-DNS hostname.", "optional": true }
+      }
+    },
+    {
+      "category": "infrastructure",
+      "name": "domain",
+      "display_name": "Domain",
+      "description": "A registered DNS domain name and its registration data.",
+      "label_property": "domain_name",
+      "icon": "globe",
+      "color": "#38bdf8",
+      "properties": {
+        "domain_name": {
+          "type": "string",
+          "description": "The fully qualified domain name.",
+          "optional": false,
+          "validator": { "regex": "^[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" }
+        },
+        "registrar": { "type": "string", "description": "Sponsoring registrar.", "optional": true },
+        "created_date": { "type": "date", "description": "Domain registration date.", "optional": true },
+        "expiration_date": { "type": "date", "description": "Domain expiry date.", "optional": true },
+        "name_servers": { "type": "text", "description": "Authoritative name servers (one per line or comma-separated).", "optional": true },
+        "status": { "type": "string", "description": "EPP / registry status (e.g. clientTransferProhibited).", "optional": true }
+      }
+    },
+    {
+      "category": "infrastructure",
+      "name": "url",
+      "display_name": "URL",
+      "description": "A resource locator pointing at a host or file.",
+      "label_property": "url",
+      "icon": "link",
+      "color": "#22d3ee",
+      "properties": {
+        "url": {
+          "type": "url",
+          "description": "The full URL.",
+          "optional": false,
+          "validator": { "regex": "^(https?|ftp):\\/\\/[^\\s/$.?#].[^\\s]*$" }
+        },
+        "domain": {
+          "type": "reference",
+          "description": "The domain this URL belongs to.",
+          "optional": true,
+          "reference": { "target": "infrastructure.domain" }
+        },
+        "http_status": { "type": "integer", "description": "Observed HTTP status code.", "optional": true, "validator": { "min": 100, "max": 599 } },
+        "page_title": { "type": "string", "description": "HTML <title> of the fetched page.", "optional": true },
+        "final_url": { "type": "url", "description": "Final URL after following redirects.", "optional": true }
+      }
+    },
+    {
+      "category": "infrastructure",
+      "name": "host",
+      "display_name": "Host",
+      "description": "A network host / server identified by hostname, with OS and service context.",
+      "label_property": "hostname",
+      "icon": "server",
+      "color": "#2dd4bf",
+      "properties": {
+        "hostname": { "type": "string", "description": "Hostname or FQDN of the host.", "optional": false },
+        "ip_address": {
+          "type": "reference",
+          "description": "Primary IP address of the host.",
+          "optional": true,
+          "reference": { "target": "infrastructure.ip_address" }
+        },
+        "operating_system": { "type": "string", "description": "Detected operating system / banner.", "optional": true },
+        "open_ports": { "type": "text", "description": "Observed open ports / services (comma-separated).", "optional": true },
+        "hosting_provider": { "type": "string", "description": "Hosting provider or cloud platform.", "optional": true }
+      }
+    },
+    {
+      "category": "infrastructure",
+      "name": "autonomous_system",
+      "display_name": "Autonomous System",
+      "description": "A BGP autonomous system (ASN) and its operator.",
+      "label_property": "autonomous_system_number",
+      "icon": "waypoints",
+      "color": "#818cf8",
+      "properties": {
+        "autonomous_system_number": {
+          "type": "integer",
+          "description": "The AS number (ASN).",
+          "optional": false,
+          "validator": { "min": 0, "max": 4294967295 }
+        },
+        "autonomous_system_name": { "type": "string", "description": "The AS organization name.", "optional": true },
+        "country_code": { "type": "string", "description": "ISO 3166-1 alpha-2 country of registration.", "optional": true, "validator": { "regex": "^[A-Z]{2}$" } },
+        "registry": {
+          "type": "enum",
+          "description": "Regional Internet Registry that allocated the ASN.",
+          "optional": true,
+          "enum": ["ARIN", "RIPE", "APNIC", "LACNIC", "AFRINIC"]
+        }
+      }
+    },
+    {
+      "category": "infrastructure",
+      "name": "netblock",
+      "display_name": "Netblock",
+      "description": "An IP address range expressed in CIDR notation.",
+      "label_property": "cidr",
+      "icon": "boxes",
+      "color": "#7dd3fc",
+      "properties": {
+        "cidr": {
+          "type": "string",
+          "description": "The network range in CIDR notation (e.g. 192.0.2.0/24).",
+          "optional": false,
+          "validator": { "regex": "^[0-9a-fA-F:.]+\\/\\d{1,3}$" }
+        },
+        "network_name": { "type": "string", "description": "Allocation / netname.", "optional": true },
+        "asn": { "type": "string", "description": "Announcing ASN.", "optional": true },
+        "country_code": { "type": "string", "description": "ISO 3166-1 alpha-2 country.", "optional": true, "validator": { "regex": "^[A-Z]{2}$" } }
+      }
+    },
+    {
+      "category": "infrastructure",
+      "name": "dns_record",
+      "display_name": "DNS Record",
+      "description": "A single DNS resource record (A, MX, TXT, ...), keyed by the owner name it is published under.",
+      "label_property": "record_name",
+      "icon": "route",
+      "color": "#5eead4",
+      "properties": {
+        "record_name": { "type": "string", "description": "The owner name the record is published under (e.g. www.example.com).", "optional": false },
+        "record_value": { "type": "string", "description": "The record's target / value (RDATA).", "optional": false },
+        "record_type": {
+          "type": "enum",
+          "description": "DNS record type.",
+          "optional": true,
+          "enum": ["A", "AAAA", "CNAME", "MX", "NS", "TXT", "SOA", "PTR", "SRV", "CAA", "DS", "DNSKEY", "HTTPS", "SVCB", "TLSA"]
+        },
+        "ttl": { "type": "integer", "description": "Time-to-live in seconds.", "optional": true, "validator": { "min": 0 } }
+      }
+    },
+    {
+      "category": "infrastructure",
+      "name": "whois_record",
+      "display_name": "WHOIS Record",
+      "description": "A WHOIS registration record, keyed by the domain or IP it describes (registrant strings are shared across many domains and make a poor identity).",
+      "label_property": "subject",
+      "icon": "scroll-text",
+      "color": "#94a3b8",
+      "properties": {
+        "subject": { "type": "string", "description": "The domain or IP this WHOIS record describes (its identity).", "optional": false },
+        "registrant": { "type": "string", "description": "Registrant name or organization.", "optional": true },
+        "registrant_email": { "type": "email", "description": "Registrant contact email.", "optional": true },
+        "registrar": { "type": "string", "description": "Sponsoring registrar.", "optional": true },
+        "created_at": { "type": "date", "description": "Registration date.", "optional": true },
+        "expires_at": { "type": "date", "description": "Expiry date.", "optional": true },
+        "raw": { "type": "text", "description": "Raw WHOIS text.", "optional": true }
+      }
+    },
+    {
+      "category": "infrastructure",
+      "name": "certificate",
+      "display_name": "TLS Certificate",
+      "description": "An X.509 / TLS certificate observed on a host.",
+      "label_property": "fingerprint_sha256",
+      "icon": "badge-check",
+      "color": "#34d399",
+      "properties": {
+        "fingerprint_sha256": {
+          "type": "hash",
+          "description": "SHA-256 fingerprint of the DER certificate.",
+          "optional": false,
+          "validator": { "format": "sha256", "regex": "^[a-fA-F0-9]{64}$" }
+        },
+        "subject_common_name": { "type": "string", "description": "Subject CN.", "optional": true },
+        "issuer": { "type": "string", "description": "Issuer DN.", "optional": true },
+        "serial_number": { "type": "string", "description": "Certificate serial number.", "optional": true },
+        "not_before": { "type": "datetime", "description": "Validity start timestamp.", "optional": true },
+        "not_after": { "type": "datetime", "description": "Expiry timestamp.", "optional": true }
+      }
+    }
+  ],
+  "edge_types": [
+    {
+      "category": "infrastructure",
+      "name": "resolves_to",
+      "label": "resolves to",
+      "display_name": "Resolves To",
+      "description": "DNS resolution from a domain or URL to an IP address.",
+      "from": ["infrastructure.domain", "infrastructure.url"],
+      "to": ["infrastructure.ip_address"]
+    },
+    {
+      "category": "infrastructure",
+      "name": "has_address",
+      "label": "has address",
+      "display_name": "Has Address",
+      "description": "A host has a primary IP address.",
+      "from": ["infrastructure.host"],
+      "to": ["infrastructure.ip_address"]
+    },
+    {
+      "category": "infrastructure",
+      "name": "announced_by",
+      "label": "announced by",
+      "display_name": "Announced By",
+      "description": "An IP address or netblock is announced by an autonomous system.",
+      "from": ["infrastructure.ip_address", "infrastructure.netblock"],
+      "to": ["infrastructure.autonomous_system"]
+    },
+    {
+      "category": "infrastructure",
+      "name": "contains",
+      "label": "contains",
+      "display_name": "Contains",
+      "description": "A netblock contains an IP address.",
+      "from": ["infrastructure.netblock"],
+      "to": ["infrastructure.ip_address"]
+    },
+    {
+      "category": "infrastructure",
+      "name": "has_record",
+      "label": "has record",
+      "display_name": "Has DNS Record",
+      "description": "A domain publishes a DNS record.",
+      "from": ["infrastructure.domain"],
+      "to": ["infrastructure.dns_record"]
+    },
+    {
+      "category": "infrastructure",
+      "name": "subdomain_of",
+      "label": "subdomain of",
+      "display_name": "Subdomain Of",
+      "description": "A domain is a subdomain of a parent domain.",
+      "from": ["infrastructure.domain"],
+      "to": ["infrastructure.domain"]
+    },
+    {
+      "category": "infrastructure",
+      "name": "has_domain",
+      "label": "has domain",
+      "display_name": "Has Domain",
+      "description": "A URL belongs to a domain.",
+      "from": ["infrastructure.url"],
+      "to": ["infrastructure.domain"]
+    },
+    {
+      "category": "infrastructure",
+      "name": "redirects_to",
+      "label": "redirects to",
+      "display_name": "Redirects To",
+      "description": "A URL redirects to another URL.",
+      "from": ["infrastructure.url"],
+      "to": ["infrastructure.url"]
+    },
+    {
+      "category": "infrastructure",
+      "name": "has_whois",
+      "label": "has whois",
+      "display_name": "Has WHOIS",
+      "description": "A domain or IP address has an associated WHOIS record.",
+      "from": ["infrastructure.domain", "infrastructure.ip_address"],
+      "to": ["infrastructure.whois_record"]
+    },
+    {
+      "category": "infrastructure",
+      "name": "presents_certificate",
+      "label": "presents certificate",
+      "display_name": "Presents Certificate",
+      "description": "A host, IP, or domain presents a TLS certificate.",
+      "from": ["infrastructure.ip_address", "infrastructure.host", "infrastructure.domain"],
+      "to": ["infrastructure.certificate"]
+    }
+  ]
+}

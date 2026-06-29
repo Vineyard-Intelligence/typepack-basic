@@ -1,0 +1,307 @@
+{
+  "identifier": "run.vineyard.typepacks.threat",
+  "content_type": "vineyard:typepack",
+  "version": "1.1.0",
+  "name": "Threat",
+  "description": "Threat-intelligence entities (malware, campaigns, vulnerabilities, threat actors, indicators, attack patterns, tools, detection signatures) and their relationships, aligned with STIX 2.1 concepts.",
+  "authors": [{ "name": "VINEYARD.RUN", "url": "https://vineyard.run" }],
+  "license": "Apache-2.0",
+  "distribution": {
+    "kind": "git",
+    "repository": "https://github.com/vineyard-run/typepacks",
+    "ref": "v1.1.0",
+    "path": "typepacks/threat.json"
+  },
+  "marketing_url": "https://vineyard.run/typepacks/threat",
+  "thumbnail_url": "https://vineyard.run/typepacks/threat/icon.png",
+  "types": [
+    {
+      "category": "threat",
+      "name": "malware",
+      "display_name": "Malware",
+      "description": "A malware family or sample with hashes and a sighting timeline.",
+      "label_property": "name",
+      "icon": "bug",
+      "color": "#f87171",
+      "properties": {
+        "name": { "type": "string", "description": "Malware name or family.", "optional": false },
+        "malware_type": {
+          "type": "enum",
+          "description": "Malware classification.",
+          "optional": false,
+          "enum": ["trojan", "ransomware", "worm", "loader", "backdoor", "rat", "stealer", "rootkit", "botnet", "downloader", "wiper", "spyware", "adware", "other", "unknown"]
+        },
+        "platform": {
+          "type": "enum",
+          "description": "Targeted platform.",
+          "optional": true,
+          "enum": ["windows", "linux", "macos", "android", "ios", "multi"]
+        },
+        "is_family": { "type": "boolean", "description": "True if this represents a family rather than a single sample.", "optional": true },
+        "hash_md5": { "type": "hash", "description": "MD5 hash of the sample.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{32}$" } },
+        "hash_sha1": { "type": "hash", "description": "SHA-1 hash of the sample.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{40}$" } },
+        "hash_sha256": { "type": "hash", "description": "SHA-256 hash of the sample.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{64}$" } },
+        "aliases": { "type": "text", "description": "Other names the malware is tracked under.", "optional": true },
+        "first_seen": { "type": "datetime", "description": "First observation timestamp.", "optional": true },
+        "last_seen": { "type": "datetime", "description": "Most recent observation timestamp.", "optional": true }
+      }
+    },
+    {
+      "category": "threat",
+      "name": "campaign",
+      "display_name": "Campaign",
+      "description": "A coordinated set of malicious activities over a period of time.",
+      "label_property": "campaign_name",
+      "icon": "target",
+      "color": "#fb923c",
+      "properties": {
+        "campaign_name": { "type": "string", "description": "Campaign name.", "optional": false },
+        "description": { "type": "text", "description": "Summary of the campaign.", "optional": true },
+        "objective": { "type": "string", "description": "Goal of the campaign (e.g. espionage, financial theft).", "optional": true },
+        "status": {
+          "type": "enum",
+          "description": "Current campaign status.",
+          "optional": true,
+          "enum": ["active", "dormant", "concluded"]
+        },
+        "first_seen": { "type": "datetime", "description": "First observed activity.", "optional": true },
+        "start_date": { "type": "date", "description": "Campaign start date.", "optional": true },
+        "end_date": { "type": "date", "description": "Campaign end date.", "optional": true },
+        "attribution": { "type": "string", "description": "Suspected actor or group.", "optional": true }
+      }
+    },
+    {
+      "category": "threat",
+      "name": "threat_actor",
+      "display_name": "Threat Actor",
+      "description": "An individual, group, or organization believed to operate with malicious intent.",
+      "label_property": "actor_name",
+      "icon": "venetian-mask",
+      "color": "#c084fc",
+      "properties": {
+        "actor_name": { "type": "string", "description": "Primary actor name or designator.", "optional": false },
+        "description": { "type": "text", "description": "Profile of the actor.", "optional": true },
+        "actor_type": {
+          "type": "enum",
+          "description": "Category of the actor.",
+          "optional": true,
+          "enum": ["nation-state", "cybercriminal", "hacktivist", "insider", "terrorist", "unknown"]
+        },
+        "motivation": {
+          "type": "enum",
+          "description": "Primary motivation.",
+          "optional": true,
+          "enum": ["espionage", "financial", "ideological", "destructive", "notoriety", "unknown"]
+        },
+        "sophistication": {
+          "type": "enum",
+          "description": "Assessed capability level.",
+          "optional": true,
+          "enum": ["minimal", "intermediate", "advanced", "strategic"]
+        },
+        "country": { "type": "string", "description": "Suspected country of origin.", "optional": true },
+        "known_aliases": { "type": "text", "description": "Known aliases / tracked names.", "optional": true },
+        "first_seen": { "type": "date", "description": "First attributed activity.", "optional": true }
+      }
+    },
+    {
+      "category": "threat",
+      "name": "vulnerability",
+      "display_name": "Vulnerability",
+      "description": "A CVE-tracked software vulnerability with severity and affected product.",
+      "label_property": "cve_id",
+      "icon": "shield-alert",
+      "color": "#fbbf24",
+      "properties": {
+        "cve_id": {
+          "type": "string",
+          "description": "CVE identifier.",
+          "optional": false,
+          "validator": { "regex": "^CVE-\\d{4}-\\d{4,}$" }
+        },
+        "cvss_score": { "type": "number", "description": "CVSS base score.", "optional": true, "validator": { "min": 0, "max": 10 } },
+        "severity": {
+          "type": "enum",
+          "description": "Qualitative severity rating.",
+          "optional": true,
+          "enum": ["none", "low", "medium", "high", "critical"]
+        },
+        "cvss_vector": { "type": "string", "description": "CVSS vector string.", "optional": true },
+        "cwe_id": { "type": "string", "description": "Associated CWE weakness identifier.", "optional": true, "validator": { "regex": "^CWE-\\d+$" } },
+        "exploited_in_wild": { "type": "boolean", "description": "Known to be exploited in the wild.", "optional": true },
+        "affected_product": { "type": "string", "description": "Affected product or component.", "optional": true },
+        "description": { "type": "text", "description": "Vulnerability description.", "optional": true },
+        "published_date": { "type": "date", "description": "Publication date.", "optional": true }
+      }
+    },
+    {
+      "category": "threat",
+      "name": "indicator",
+      "display_name": "Indicator",
+      "description": "An indicator of compromise (IOC): an abstract, confidence-scored observable. Link it to the concrete typed node it identifies (e.g. infrastructure.ip_address, endpoint.file) with the refers_to edge.",
+      "label_property": "value",
+      "icon": "crosshair",
+      "color": "#fb7185",
+      "properties": {
+        "value": { "type": "string", "description": "The indicator value.", "optional": false },
+        "indicator_type": {
+          "type": "enum",
+          "description": "What kind of artifact the value is.",
+          "optional": true,
+          "enum": ["ipv4", "ipv6", "domain", "url", "md5", "sha1", "sha256", "email", "filename", "registry_key", "mutex"]
+        },
+        "confidence": {
+          "type": "enum",
+          "description": "Analyst confidence in the indicator.",
+          "optional": true,
+          "enum": ["low", "medium", "high"]
+        },
+        "valid_from": { "type": "datetime", "description": "Time from which the indicator is considered valid.", "optional": true },
+        "description": { "type": "text", "description": "Context for the indicator.", "optional": true }
+      }
+    },
+    {
+      "category": "threat",
+      "name": "attack_pattern",
+      "display_name": "Attack Pattern",
+      "description": "An adversary technique, mapped where possible to MITRE ATT&CK.",
+      "label_property": "name",
+      "icon": "swords",
+      "color": "#f472b6",
+      "properties": {
+        "name": { "type": "string", "description": "Technique name.", "optional": false },
+        "technique_id": { "type": "string", "description": "MITRE ATT&CK technique ID.", "optional": true, "validator": { "regex": "^T\\d{4}(\\.\\d{3})?$" } },
+        "tactic": {
+          "type": "enum",
+          "description": "ATT&CK tactic (kill-chain phase).",
+          "optional": true,
+          "enum": ["reconnaissance", "resource-development", "initial-access", "execution", "persistence", "privilege-escalation", "defense-evasion", "credential-access", "discovery", "lateral-movement", "collection", "command-and-control", "exfiltration", "impact"]
+        },
+        "description": { "type": "text", "description": "How the technique works.", "optional": true }
+      }
+    },
+    {
+      "category": "threat",
+      "name": "tool",
+      "display_name": "Tool",
+      "description": "Legitimate or offensive software used by an actor to carry out activity.",
+      "label_property": "name",
+      "icon": "wrench",
+      "color": "#fdba74",
+      "properties": {
+        "name": { "type": "string", "description": "Tool name.", "optional": false },
+        "tool_type": {
+          "type": "enum",
+          "description": "Functional category of the tool.",
+          "optional": true,
+          "enum": ["c2", "rat", "loader", "stealer", "exploitation", "post-exploitation", "recon", "utility"]
+        },
+        "aliases": { "type": "text", "description": "Other names for the tool.", "optional": true },
+        "description": { "type": "text", "description": "What the tool does.", "optional": true }
+      }
+    },
+    {
+      "category": "threat",
+      "name": "signature",
+      "display_name": "Detection Signature",
+      "description": "A detection rule (YARA, Sigma, Snort, ...) used to identify threats.",
+      "label_property": "name",
+      "icon": "scan-line",
+      "color": "#a3e635",
+      "properties": {
+        "name": { "type": "string", "description": "Rule name.", "optional": false },
+        "signature_type": {
+          "type": "enum",
+          "description": "Detection engine the rule targets.",
+          "optional": true,
+          "enum": ["yara", "sigma", "snort", "suricata", "clamav"]
+        },
+        "rule": { "type": "text", "description": "The rule body.", "optional": true },
+        "description": { "type": "text", "description": "What the rule detects.", "optional": true }
+      }
+    }
+  ],
+  "edge_types": [
+    {
+      "category": "threat",
+      "name": "uses",
+      "label": "uses",
+      "display_name": "Uses",
+      "description": "An actor or campaign uses malware, a tool, or an attack pattern.",
+      "from": ["threat.threat_actor", "threat.campaign"],
+      "to": ["threat.malware", "threat.tool", "threat.attack_pattern"]
+    },
+    {
+      "category": "threat",
+      "name": "attributed_to",
+      "label": "attributed to",
+      "display_name": "Attributed To",
+      "description": "A campaign is attributed to a threat actor.",
+      "from": ["threat.campaign"],
+      "to": ["threat.threat_actor"]
+    },
+    {
+      "category": "threat",
+      "name": "targets",
+      "label": "targets",
+      "display_name": "Targets",
+      "description": "An actor or campaign targets a victim entity (org, sector, asset).",
+      "from": ["threat.threat_actor", "threat.campaign"],
+      "to": ["*"]
+    },
+    {
+      "category": "threat",
+      "name": "exploits",
+      "label": "exploits",
+      "display_name": "Exploits",
+      "description": "Malware, a campaign, or a technique exploits a vulnerability.",
+      "from": ["threat.malware", "threat.campaign", "threat.attack_pattern"],
+      "to": ["threat.vulnerability"]
+    },
+    {
+      "category": "threat",
+      "name": "indicates",
+      "label": "indicates",
+      "display_name": "Indicates",
+      "description": "An indicator points to malware, a campaign, an actor, or a technique.",
+      "from": ["threat.indicator"],
+      "to": ["threat.malware", "threat.campaign", "threat.threat_actor", "threat.attack_pattern"]
+    },
+    {
+      "category": "threat",
+      "name": "variant_of",
+      "label": "variant of",
+      "display_name": "Variant Of",
+      "description": "A malware sample or family is a variant of another.",
+      "from": ["threat.malware"],
+      "to": ["threat.malware"]
+    },
+    {
+      "category": "threat",
+      "name": "detects",
+      "label": "detects",
+      "display_name": "Detects",
+      "description": "A detection signature detects malware, an indicator, or a technique.",
+      "from": ["threat.signature"],
+      "to": ["threat.malware", "threat.indicator", "threat.attack_pattern"]
+    },
+    {
+      "category": "threat",
+      "name": "communicates_with",
+      "label": "communicates with",
+      "display_name": "Communicates With",
+      "description": "Malware or a tool communicates with infrastructure (C2, beacon, drop).",
+      "from": ["threat.malware", "threat.tool"],
+      "to": ["*"]
+    },
+    {
+      "category": "threat",
+      "name": "refers_to",
+      "label": "refers to",
+      "display_name": "Refers To",
+      "description": "An indicator refers to the concrete typed node (in any pack) that it identifies.",
+      "from": ["threat.indicator"],
+      "to": ["*"]
+    }
+  ]
+}

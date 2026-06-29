@@ -1,0 +1,144 @@
+{
+  "identifier": "run.vineyard.typepacks.financial",
+  "content_type": "vineyard:typepack",
+  "version": "1.0.0",
+  "name": "Financial",
+  "description": "Money-trail entities for following the funds — cryptocurrency addresses and transactions, exchanges, and bank accounts. Public identifiers only; no keys, PANs, or credentials.",
+  "authors": [{ "name": "VINEYARD.RUN", "url": "https://vineyard.run" }],
+  "license": "Apache-2.0",
+  "distribution": {
+    "kind": "git",
+    "repository": "https://github.com/vineyard-run/typepacks",
+    "ref": "v1.0.0",
+    "path": "typepacks/financial.json"
+  },
+  "marketing_url": "https://vineyard.run/typepacks/financial",
+  "thumbnail_url": "https://vineyard.run/typepacks/financial/icon.png",
+  "types": [
+    {
+      "category": "financial",
+      "name": "crypto_address",
+      "display_name": "Crypto Address",
+      "description": "A public cryptocurrency wallet address.",
+      "label_property": "address",
+      "icon": "wallet",
+      "color": "#f59e0b",
+      "properties": {
+        "address": { "type": "string", "description": "The public wallet address.", "optional": false },
+        "currency": {
+          "type": "enum",
+          "description": "Asset / chain.",
+          "optional": true,
+          "enum": ["btc", "eth", "xmr", "usdt", "trx", "ltc", "bnb", "sol", "other"]
+        },
+        "balance": { "type": "number", "description": "Observed balance, in the native unit.", "optional": true, "validator": { "min": 0 } },
+        "owner_label": { "type": "string", "description": "Attribution tag (e.g. exchange, mixer, known actor).", "optional": true },
+        "first_seen": { "type": "datetime", "description": "First observed activity.", "optional": true }
+      }
+    },
+    {
+      "category": "financial",
+      "name": "crypto_transaction",
+      "display_name": "Crypto Transaction",
+      "description": "A single on-chain cryptocurrency transaction.",
+      "label_property": "tx_hash",
+      "icon": "arrow-left-right",
+      "color": "#fbbf24",
+      "properties": {
+        "tx_hash": { "type": "hash", "description": "The transaction hash / id.", "optional": false },
+        "currency": {
+          "type": "enum",
+          "description": "Asset / chain.",
+          "optional": true,
+          "enum": ["btc", "eth", "xmr", "usdt", "trx", "ltc", "bnb", "sol", "other"]
+        },
+        "amount": { "type": "number", "description": "Transferred amount, in the native unit.", "optional": true, "validator": { "min": 0 } },
+        "fee": { "type": "number", "description": "Network fee paid.", "optional": true, "validator": { "min": 0 } },
+        "timestamp": { "type": "datetime", "description": "Block / confirmation time.", "optional": true }
+      }
+    },
+    {
+      "category": "financial",
+      "name": "exchange",
+      "display_name": "Exchange",
+      "description": "A cryptocurrency exchange or virtual-asset service provider.",
+      "label_property": "name",
+      "icon": "landmark",
+      "color": "#eab308",
+      "properties": {
+        "name": { "type": "string", "description": "Exchange / VASP name.", "optional": false },
+        "country": { "type": "string", "description": "Country of registration.", "optional": true },
+        "kyc_level": {
+          "type": "enum",
+          "description": "Know-Your-Customer rigor.",
+          "optional": true,
+          "enum": ["none", "partial", "full", "unknown"]
+        },
+        "website": { "type": "url", "description": "Exchange website.", "optional": true }
+      }
+    },
+    {
+      "category": "financial",
+      "name": "bank_account",
+      "display_name": "Bank Account",
+      "description": "A traditional bank account identified by its public account identifier (IBAN / account number).",
+      "label_property": "account_identifier",
+      "icon": "banknote",
+      "color": "#ca8a04",
+      "properties": {
+        "account_identifier": { "type": "string", "description": "IBAN or account number used as the identifier.", "optional": false },
+        "bank_name": { "type": "string", "description": "Holding bank.", "optional": true },
+        "account_holder": { "type": "string", "description": "Named account holder.", "optional": true },
+        "country": { "type": "string", "description": "Country of the account.", "optional": true },
+        "currency": { "type": "string", "description": "Account currency (ISO 4217).", "optional": true }
+      }
+    }
+  ],
+  "edge_types": [
+    {
+      "category": "financial",
+      "name": "transfers_to",
+      "label": "transfers to",
+      "display_name": "Transfers To",
+      "description": "Funds move from one account/address to another.",
+      "from": ["financial.crypto_address", "financial.bank_account"],
+      "to": ["financial.crypto_address", "financial.bank_account"]
+    },
+    {
+      "category": "financial",
+      "name": "input_to",
+      "label": "input to",
+      "display_name": "Input To",
+      "description": "An address is an input to a transaction.",
+      "from": ["financial.crypto_address"],
+      "to": ["financial.crypto_transaction"]
+    },
+    {
+      "category": "financial",
+      "name": "output_to",
+      "label": "output to",
+      "display_name": "Output To",
+      "description": "A transaction sends an output to an address.",
+      "from": ["financial.crypto_transaction"],
+      "to": ["financial.crypto_address"]
+    },
+    {
+      "category": "financial",
+      "name": "hosted_at",
+      "label": "hosted at",
+      "display_name": "Hosted At",
+      "description": "An address or account is custodied at an exchange.",
+      "from": ["financial.crypto_address", "financial.bank_account"],
+      "to": ["financial.exchange"]
+    },
+    {
+      "category": "financial",
+      "name": "controlled_by",
+      "label": "controlled by",
+      "display_name": "Controlled By",
+      "description": "An address, account, or exchange is controlled by an external entity.",
+      "from": ["financial.crypto_address", "financial.bank_account", "financial.exchange"],
+      "to": ["*"]
+    }
+  ]
+}
