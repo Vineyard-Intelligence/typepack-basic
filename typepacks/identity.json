@@ -1,15 +1,20 @@
 {
   "identifier": "run.vineyard.typepacks.identity",
   "content_type": "vineyard:typepack",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "Identity",
   "description": "People, organizations, and the online identities that connect them — personas, email addresses, phone numbers, and social/online accounts — for OSINT persona and attribution work.",
-  "authors": [{ "name": "VINEYARD.RUN", "url": "https://vineyard.run" }],
+  "authors": [
+    {
+      "name": "VINEYARD.RUN",
+      "url": "https://vineyard.run"
+    }
+  ],
   "license": "Apache-2.0",
   "distribution": {
     "kind": "git",
     "repository": "https://github.com/vineyard-run/typepacks",
-    "ref": "v1.0.0",
+    "ref": "v1.1.0",
     "path": "typepacks/identity.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/identity",
@@ -24,12 +29,36 @@
       "icon": "user",
       "color": "#d8b4fe",
       "properties": {
-        "full_name": { "type": "string", "description": "Full name or primary persona name.", "optional": false },
-        "aliases": { "type": "text", "description": "Other names, nicknames, or handles.", "optional": true },
-        "date_of_birth": { "type": "date", "description": "Date of birth.", "optional": true },
-        "nationality": { "type": "string", "description": "Nationality or citizenship.", "optional": true },
-        "gender": { "type": "string", "description": "Gender.", "optional": true },
-        "occupation": { "type": "string", "description": "Occupation or role.", "optional": true }
+        "full_name": {
+          "type": "string",
+          "description": "Full name or primary persona name.",
+          "optional": false
+        },
+        "aliases": {
+          "type": "text",
+          "description": "Other names, nicknames, or handles.",
+          "optional": true
+        },
+        "date_of_birth": {
+          "type": "date",
+          "description": "Date of birth.",
+          "optional": true
+        },
+        "nationality": {
+          "type": "string",
+          "description": "Nationality or citizenship.",
+          "optional": true
+        },
+        "gender": {
+          "type": "string",
+          "description": "Gender.",
+          "optional": true
+        },
+        "occupation": {
+          "type": "string",
+          "description": "Occupation or role.",
+          "optional": true
+        }
       }
     },
     {
@@ -41,17 +70,44 @@
       "icon": "building-2",
       "color": "#c4b5fd",
       "properties": {
-        "name": { "type": "string", "description": "Organization name.", "optional": false },
+        "name": {
+          "type": "string",
+          "description": "Organization name.",
+          "optional": false
+        },
         "org_type": {
           "type": "enum",
           "description": "Kind of organization.",
           "optional": true,
-          "enum": ["company", "government", "ngo", "educational", "criminal", "unknown"]
+          "enum": [
+            "company",
+            "government",
+            "ngo",
+            "educational",
+            "criminal",
+            "unknown"
+          ]
         },
-        "country": { "type": "string", "description": "Country of incorporation or operation.", "optional": true },
-        "industry": { "type": "string", "description": "Industry or sector.", "optional": true },
-        "website": { "type": "url", "description": "Primary website.", "optional": true },
-        "registration_number": { "type": "string", "description": "Company / registration number.", "optional": true }
+        "country": {
+          "type": "string",
+          "description": "Country of incorporation or operation.",
+          "optional": true
+        },
+        "industry": {
+          "type": "string",
+          "description": "Industry or sector.",
+          "optional": true
+        },
+        "website": {
+          "type": "url",
+          "description": "Primary website.",
+          "optional": true
+        },
+        "registration_number": {
+          "type": "string",
+          "description": "Company / registration number.",
+          "optional": true
+        }
       }
     },
     {
@@ -67,11 +123,25 @@
           "type": "email",
           "description": "The email address.",
           "optional": false,
-          "validator": { "regex": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" }
+          "validator": {
+            "regex": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
+          }
         },
-        "display_name": { "type": "string", "description": "Display name associated with the address.", "optional": true },
-        "domain": { "type": "string", "description": "The domain part of the address.", "optional": true },
-        "breached": { "type": "boolean", "description": "Seen in a known data breach.", "optional": true }
+        "display_name": {
+          "type": "string",
+          "description": "Display name associated with the address.",
+          "optional": true
+        },
+        "domain": {
+          "type": "string",
+          "description": "The domain part of the address.",
+          "optional": true
+        },
+        "breached": {
+          "type": "boolean",
+          "description": "Seen in a known data breach.",
+          "optional": true
+        }
       }
     },
     {
@@ -87,15 +157,78 @@
           "type": "string",
           "description": "The phone number.",
           "optional": false,
-          "validator": { "regex": "^\\+?[0-9 ().-]{5,}$" }
+          "validator": {
+            "regex": "^\\+?[0-9 ().-]{5,}$"
+          }
         },
-        "country_code": { "type": "string", "description": "Dialing country code.", "optional": true },
-        "carrier": { "type": "string", "description": "Carrier / network operator.", "optional": true },
+        "country_code": {
+          "type": "string",
+          "description": "Dialing country code.",
+          "optional": true
+        },
+        "carrier": {
+          "type": "string",
+          "description": "Carrier / network operator.",
+          "optional": true
+        },
         "line_type": {
           "type": "enum",
           "description": "Type of line.",
           "optional": true,
-          "enum": ["mobile", "landline", "voip", "unknown"]
+          "enum": [
+            "mobile",
+            "landline",
+            "voip",
+            "unknown"
+          ]
+        }
+      }
+    },
+    {
+      "category": "identity",
+      "name": "handle",
+      "display_name": "Handle",
+      "description": "A name, alias, or nickname used by an as-yet-unidentified person or organization. Use it when a string is all you have: it names the actor without asserting whether they are a person, an organization, or one account. Resolve it into person / organization / user_account nodes as the investigation identifies them.",
+      "label_property": "handle",
+      "icon": "tag",
+      "color": "#a78bfa",
+      "properties": {
+        "handle": {
+          "type": "string",
+          "description": "The handle, alias, or nickname as observed.",
+          "optional": false
+        },
+        "first_seen_context": {
+          "type": "text",
+          "description": "Where the handle was observed — post, channel, leak, report.",
+          "optional": true
+        },
+        "actor_kind": {
+          "type": "enum",
+          "description": "What the handle is believed to name, if anything is known yet.",
+          "optional": true,
+          "enum": [
+            "unknown",
+            "person",
+            "organization",
+            "group",
+            "automated"
+          ]
+        },
+        "confidence": {
+          "type": "enum",
+          "description": "Confidence that this handle is a meaningful investigative entity rather than noise.",
+          "optional": true,
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "notes": {
+          "type": "text",
+          "description": "Free-form notes.",
+          "optional": true
         }
       }
     },
@@ -105,17 +238,53 @@
       "display_name": "User Account",
       "description": "An online or social-media account / handle.",
       "label_property": "username",
+      "identity_properties": [
+        "username",
+        "platform"
+      ],
       "icon": "at-sign",
       "color": "#e879f9",
       "properties": {
-        "username": { "type": "string", "description": "Username or handle.", "optional": false },
-        "platform": { "type": "string", "description": "Platform or service (e.g. x, github, telegram).", "optional": true },
-        "profile_url": { "type": "url", "description": "URL of the profile.", "optional": true },
-        "display_name": { "type": "string", "description": "Display name shown on the platform.", "optional": true },
-        "user_id": { "type": "string", "description": "Stable numeric / internal account id.", "optional": true },
-        "followers": { "type": "integer", "description": "Follower count.", "optional": true, "validator": { "min": 0 } },
-        "created_date": { "type": "date", "description": "Account creation date.", "optional": true }
-      }
+        "username": {
+          "type": "string",
+          "description": "Username or handle.",
+          "optional": false
+        },
+        "platform": {
+          "type": "string",
+          "description": "Platform or service (e.g. x, github, telegram).",
+          "optional": true
+        },
+        "profile_url": {
+          "type": "url",
+          "description": "URL of the profile.",
+          "optional": true
+        },
+        "display_name": {
+          "type": "string",
+          "description": "Display name shown on the platform.",
+          "optional": true
+        },
+        "user_id": {
+          "type": "string",
+          "description": "Stable numeric / internal account id.",
+          "optional": true
+        },
+        "followers": {
+          "type": "integer",
+          "description": "Follower count.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "created_date": {
+          "type": "date",
+          "description": "Account creation date.",
+          "optional": true
+        }
+      },
+      "label_template": "{username} · {platform}"
     }
   ],
   "edge_types": [
@@ -124,9 +293,17 @@
       "name": "owns",
       "label": "owns",
       "display_name": "Owns",
-      "description": "A person or organization owns an account, email, or phone number.",
-      "from": ["identity.person", "identity.organization"],
-      "to": ["identity.user_account", "identity.email_address", "identity.phone_number"]
+      "description": "A person, organization, or unattributed handle owns an account, email, or phone number.",
+      "from": [
+        "identity.person",
+        "identity.organization",
+        "identity.handle"
+      ],
+      "to": [
+        "identity.user_account",
+        "identity.email_address",
+        "identity.phone_number"
+      ]
     },
     {
       "category": "identity",
@@ -134,8 +311,12 @@
       "label": "member of",
       "display_name": "Member Of",
       "description": "A person is a member of an organization.",
-      "from": ["identity.person"],
-      "to": ["identity.organization"]
+      "from": [
+        "identity.person"
+      ],
+      "to": [
+        "identity.organization"
+      ]
     },
     {
       "category": "identity",
@@ -143,8 +324,12 @@
       "label": "affiliated with",
       "display_name": "Affiliated With",
       "description": "An organization is affiliated with another organization.",
-      "from": ["identity.organization"],
-      "to": ["identity.organization"]
+      "from": [
+        "identity.organization"
+      ],
+      "to": [
+        "identity.organization"
+      ]
     },
     {
       "category": "identity",
@@ -153,8 +338,16 @@
       "display_name": "Same As",
       "description": "Two personas or accounts are assessed to be the same identity.",
       "directed": false,
-      "from": ["identity.person", "identity.user_account"],
-      "to": ["identity.person", "identity.user_account"]
+      "from": [
+        "identity.person",
+        "identity.user_account",
+        "identity.handle"
+      ],
+      "to": [
+        "identity.person",
+        "identity.user_account",
+        "identity.handle"
+      ]
     },
     {
       "category": "identity",
@@ -162,8 +355,29 @@
       "label": "controls",
       "display_name": "Controls",
       "description": "A person or organization controls another entity or asset.",
-      "from": ["identity.person", "identity.organization"],
-      "to": ["*"]
+      "from": [
+        "identity.person",
+        "identity.organization",
+        "identity.handle"
+      ],
+      "to": [
+        "*"
+      ]
+    },
+    {
+      "category": "identity",
+      "name": "resolves_to",
+      "label": "resolves to",
+      "display_name": "Resolves To",
+      "description": "An unattributed handle has been identified as this person, organization, or account. Kept separate from `same_as` so the moment of attribution stays visible in the graph rather than being flattened into an equivalence.",
+      "from": [
+        "identity.handle"
+      ],
+      "to": [
+        "identity.person",
+        "identity.organization",
+        "identity.user_account"
+      ]
     }
   ]
 }
