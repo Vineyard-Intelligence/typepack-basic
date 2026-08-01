@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "name": "Endpoint",
   "description": "Host and endpoint forensic artifacts (files, processes, registry keys, services, mutexes, scheduled tasks) for DFIR and malware-behavior mapping.",
-  "authors": [{ "name": "VINEYARD.RUN", "url": "https://vineyard.run" }],
+  "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
   "license": "Apache-2.0",
   "distribution": {
     "kind": "git",
