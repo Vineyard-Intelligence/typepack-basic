@@ -1,9 +1,9 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "name": "Infrastructure",
-  "description": "Network-infrastructure OSINT entities (IP addresses, domains, URLs, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates) and the relationships between them.",
+  "description": "Network-infrastructure OSINT entities (IP addresses, domains, URLs, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, technologies) and the relationships between them.",
   "authors": [
     {
       "name": "VINEYARD.RUN",
@@ -14,7 +14,7 @@
   "distribution": {
     "kind": "git",
     "repository": "https://github.com/vineyard-run/typepacks",
-    "ref": "v1.1.0",
+    "ref": "v1.2.0",
     "path": "typepacks/infrastructure.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/infrastructure",
@@ -429,6 +429,53 @@
           "optional": true
         }
       }
+    },
+    {
+      "category": "infrastructure",
+      "name": "technologies",
+      "display_name": "Technologies",
+      "description": "A technology observed on or behind a host: software (web server, CMS, framework), hardware (appliance, device), or a third-party service (Cloudflare, AWS, Google Analytics). One type covers all three so a fingerprinting result is a single node kind.",
+      "label_property": "name",
+      "icon": "cpu",
+      "color": "#f0abfc",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Technology name (e.g. nginx, Cloudflare, WordPress, TP-Link).",
+          "optional": false
+        },
+        "kind": {
+          "type": "enum",
+          "description": "What kind of technology this is.",
+          "optional": true,
+          "enum": ["software", "hardware", "service", "library", "protocol", "unknown"]
+        },
+        "vendor": {
+          "type": "string",
+          "description": "Vendor or maintainer of the technology.",
+          "optional": true
+        },
+        "version": {
+          "type": "string",
+          "description": "Detected version string.",
+          "optional": true
+        },
+        "cpe": {
+          "type": "string",
+          "description": "CPE 2.3 identifier when mapped (e.g. cpe:2.3:a:nginx:nginx:1.18.0).",
+          "optional": true
+        },
+        "category": {
+          "type": "string",
+          "description": "Functional category (web server, CDN, analytics, WAF, OS, ...).",
+          "optional": true
+        },
+        "evidence": {
+          "type": "text",
+          "description": "How the technology was detected (header, banner, fingerprint, script).",
+          "optional": true
+        }
+      }
     }
   ],
   "edge_types": [
@@ -565,6 +612,22 @@
       ],
       "to": [
         "infrastructure.certificate"
+      ]
+    },
+    {
+      "category": "infrastructure",
+      "name": "runs_technology",
+      "label": "runs technology",
+      "display_name": "Runs Technology",
+      "description": "A host, IP, domain, or URL runs or is served by a technology (software, hardware, or third-party service).",
+      "from": [
+        "infrastructure.host",
+        "infrastructure.ip_address",
+        "infrastructure.domain",
+        "infrastructure.url"
+      ],
+      "to": [
+        "infrastructure.technologies"
       ]
     }
   ]
