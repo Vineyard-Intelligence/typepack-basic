@@ -1,15 +1,15 @@
 {
   "identifier": "run.vineyard.typepacks.threat",
   "content_type": "vineyard:typepack",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "name": "Threat",
-  "description": "Threat-intelligence entities (malware, campaigns, vulnerabilities, threat actors, indicators, attack patterns, tools, detection signatures) and their relationships, aligned with STIX 2.1 concepts.",
+  "description": "Threat-intelligence entities (malware, campaigns, operations, vulnerabilities, threat actors, indicators, attack patterns, tools, detection signatures) and their relationships, aligned with STIX 2.1 concepts.",
   "authors": [{ "name": "VINEYARD.RUN", "url": "https://vineyard.run" }],
   "license": "Apache-2.0",
   "distribution": {
     "kind": "git",
     "repository": "https://github.com/vineyard-run/typepacks",
-    "ref": "v1.1.0",
+    "ref": "v1.2.0",
     "path": "typepacks/threat.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/threat",
@@ -68,6 +68,34 @@
         "start_date": { "type": "date", "description": "Campaign start date.", "optional": true },
         "end_date": { "type": "date", "description": "Campaign end date.", "optional": true },
         "attribution": { "type": "string", "description": "Suspected actor or group.", "optional": true }
+      }
+    },
+    {
+      "category": "threat",
+      "name": "operation",
+      "display_name": "Operation",
+      "description": "A single, bounded operation within a campaign: a specific wave, intrusion, or offensive action with its own timeline and objectives. Think of it as a subset of a campaign — one campaign can contain multiple operations.",
+      "label_property": "operation_name",
+      "icon": "crosshair",
+      "color": "#f97316",
+      "properties": {
+        "operation_name": { "type": "string", "description": "Operation name or designator.", "optional": false },
+        "description": { "type": "text", "description": "Summary of the operation.", "optional": true },
+        "objective": { "type": "string", "description": "Goal of this specific operation.", "optional": true },
+        "status": {
+          "type": "enum",
+          "description": "Current operation status.",
+          "optional": true,
+          "enum": ["planned", "active", "dormant", "concluded", "failed"]
+        },
+        "start_date": { "type": "date", "description": "Operation start date.", "optional": true },
+        "end_date": { "type": "date", "description": "Operation end date.", "optional": true },
+        "campaign": {
+          "type": "reference",
+          "description": "The parent campaign this operation belongs to.",
+          "optional": true,
+          "reference": { "target": "threat.campaign" }
+        }
       }
     },
     {
@@ -227,8 +255,8 @@
       "name": "uses",
       "label": "uses",
       "display_name": "Uses",
-      "description": "An actor or campaign uses malware, a tool, or an attack pattern.",
-      "from": ["threat.threat_actor", "threat.campaign"],
+      "description": "An actor, campaign, or operation uses malware, a tool, or an attack pattern.",
+      "from": ["threat.threat_actor", "threat.campaign", "threat.operation"],
       "to": ["threat.malware", "threat.tool", "threat.attack_pattern"]
     },
     {
@@ -236,17 +264,26 @@
       "name": "attributed_to",
       "label": "attributed to",
       "display_name": "Attributed To",
-      "description": "A campaign is attributed to a threat actor.",
-      "from": ["threat.campaign"],
+      "description": "A campaign or operation is attributed to a threat actor.",
+      "from": ["threat.campaign", "threat.operation"],
       "to": ["threat.threat_actor"]
+    },
+    {
+      "category": "threat",
+      "name": "part_of",
+      "label": "part of",
+      "display_name": "Part Of",
+      "description": "An operation is part of a broader campaign.",
+      "from": ["threat.operation"],
+      "to": ["threat.campaign"]
     },
     {
       "category": "threat",
       "name": "targets",
       "label": "targets",
       "display_name": "Targets",
-      "description": "An actor or campaign targets a victim entity (org, sector, asset).",
-      "from": ["threat.threat_actor", "threat.campaign"],
+      "description": "An actor, campaign, or operation targets a victim entity (org, sector, asset).",
+      "from": ["threat.threat_actor", "threat.campaign", "threat.operation"],
       "to": ["*"]
     },
     {
@@ -254,8 +291,8 @@
       "name": "exploits",
       "label": "exploits",
       "display_name": "Exploits",
-      "description": "Malware, a campaign, or a technique exploits a vulnerability.",
-      "from": ["threat.malware", "threat.campaign", "threat.attack_pattern"],
+      "description": "Malware, a campaign, an operation, or a technique exploits a vulnerability.",
+      "from": ["threat.malware", "threat.campaign", "threat.operation", "threat.attack_pattern"],
       "to": ["threat.vulnerability"]
     },
     {
@@ -263,9 +300,9 @@
       "name": "indicates",
       "label": "indicates",
       "display_name": "Indicates",
-      "description": "An indicator points to malware, a campaign, an actor, or a technique.",
+      "description": "An indicator points to malware, a campaign, an operation, an actor, or a technique.",
       "from": ["threat.indicator"],
-      "to": ["threat.malware", "threat.campaign", "threat.threat_actor", "threat.attack_pattern"]
+      "to": ["threat.malware", "threat.campaign", "threat.operation", "threat.threat_actor", "threat.attack_pattern"]
     },
     {
       "category": "threat",
