@@ -6,7 +6,7 @@
   "description": "Network-infrastructure OSINT entities (IP addresses, domains, URLs, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, technologies) and the relationships between them.",
   "authors": [
     {
-      "name": "VINEYARD.RUN",
+      "name": "VINEYARD",
       "url": "https://vineyard.run"
     }
   ],
