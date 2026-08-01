@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "name": "Geospatial",
   "description": "Places and physical context — locations with coordinates, postal addresses, and facilities — to anchor the 'where' of an investigation.",
-  "authors": [{ "name": "VINEYARD.RUN", "url": "https://vineyard.run" }],
+  "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
   "license": "Apache-2.0",
   "distribution": {
     "kind": "git",

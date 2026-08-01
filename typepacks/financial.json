@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "name": "Financial",
   "description": "Money-trail entities for following the funds — cryptocurrency addresses and transactions, exchanges, and bank accounts. Public identifiers only; no keys, PANs, or credentials.",
-  "authors": [{ "name": "VINEYARD.RUN", "url": "https://vineyard.run" }],
+  "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
   "license": "Apache-2.0",
   "distribution": {
     "kind": "git",
