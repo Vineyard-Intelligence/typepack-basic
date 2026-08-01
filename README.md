@@ -5,8 +5,8 @@ properties, and the edge types that connect them. No code runs; a Type Pack is d
 
 | Type Pack | Identifier | Types · edges |
 | --- | --- | --- |
-| Infrastructure | `run.vineyard.typepacks.infrastructure` | 9 · 10 |
-| Threat | `run.vineyard.typepacks.threat` | 8 · 9 |
+| Infrastructure | `run.vineyard.typepacks.infrastructure` | 10 · 11 |
+| Threat | `run.vineyard.typepacks.threat` | 9 · 10 |
 | Identity | `run.vineyard.typepacks.identity` | 5 · 5 |
 | Financial | `run.vineyard.typepacks.financial` | 4 · 5 |
 | Endpoint | `run.vineyard.typepacks.endpoint` | 6 · 7 |
