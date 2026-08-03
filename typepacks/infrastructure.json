@@ -1,9 +1,9 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "name": "Infrastructure",
-  "description": "Network-infrastructure OSINT entities (IP addresses, domains, URLs, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, technologies) and the relationships between them.",
+  "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
   "authors": [
     {
       "name": "VINEYARD",
@@ -13,8 +13,8 @@
   "license": "Apache-2.0",
   "distribution": {
     "kind": "git",
-    "repository": "https://github.com/vineyard-run/typepacks",
-    "ref": "v1.2.0",
+    "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
+    "ref": "v2.0.0",
     "path": "typepacks/infrastructure.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/infrastructure",
@@ -116,7 +116,7 @@
       }
     },
     {
-      "category": "infrastructure",
+      "category": "web",
       "name": "url",
       "display_name": "URL",
       "description": "A resource locator pointing at a host or file.",
@@ -487,7 +487,7 @@
       "description": "DNS resolution from a domain or URL to an IP address.",
       "from": [
         "infrastructure.domain",
-        "infrastructure.url"
+        "web.url"
       ],
       "to": [
         "infrastructure.ip_address"
@@ -566,7 +566,7 @@
       "display_name": "Has Domain",
       "description": "A URL belongs to a domain.",
       "from": [
-        "infrastructure.url"
+        "web.url"
       ],
       "to": [
         "infrastructure.domain"
@@ -579,10 +579,10 @@
       "display_name": "Redirects To",
       "description": "A URL redirects to another URL.",
       "from": [
-        "infrastructure.url"
+        "web.url"
       ],
       "to": [
-        "infrastructure.url"
+        "web.url"
       ]
     },
     {
@@ -624,7 +624,7 @@
         "infrastructure.host",
         "infrastructure.ip_address",
         "infrastructure.domain",
-        "infrastructure.url"
+        "web.url"
       ],
       "to": [
         "infrastructure.technologies"
