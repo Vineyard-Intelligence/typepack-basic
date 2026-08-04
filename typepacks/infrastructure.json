@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "name": "Infrastructure",
   "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
   "authors": [
@@ -14,7 +14,7 @@
   "distribution": {
     "kind": "git",
     "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
-    "ref": "v2.0.0",
+    "ref": "v2.1.0",
     "path": "typepacks/infrastructure.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/infrastructure",
@@ -157,6 +157,134 @@
         "final_url": {
           "type": "url",
           "description": "Final URL after following redirects.",
+          "optional": true
+        }
+      }
+    },
+    {
+      "category": "web",
+      "name": "hhhash",
+      "display_name": "HTTP Header Hash (HHHash)",
+      "description": "A hash of the normalized HTTP/1 response header structure (which headers, in which order) — a stable fingerprint of the server stack behind a host, used to cluster infrastructure deployed from the same template.",
+      "label_property": "hash_value",
+      "icon": "file-code",
+      "color": "#f0abfc",
+      "properties": {
+        "hash_value": {
+          "type": "hash",
+          "description": "The HHHash value (SHA-256 of the normalized header set).",
+          "optional": false,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{64}$"
+          }
+        },
+        "header_count": {
+          "type": "integer",
+          "description": "Number of distinct headers hashed.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "server_hint": {
+          "type": "string",
+          "description": "Server / framework hint observed alongside the headers (e.g. nginx, cloudflare).",
+          "optional": true
+        },
+        "source_url": {
+          "type": "reference",
+          "description": "The URL this header hash was observed on.",
+          "optional": true,
+          "reference": {
+            "target": "web.url"
+          }
+        },
+        "observed_at": {
+          "type": "datetime",
+          "description": "When the headers were captured.",
+          "optional": true
+        }
+      }
+    },
+    {
+      "category": "web",
+      "name": "favicon_hash",
+      "display_name": "Favicon Hash",
+      "description": "A MurmurHash3 (MMH3) hash of a site's favicon binary — a low-entropy fingerprint often reused verbatim across phishing kits, scam portals and darknet storefronts, making it a durable pivot between otherwise unrelated hosts.",
+      "label_property": "hash_value",
+      "icon": "image",
+      "color": "#fda4af",
+      "properties": {
+        "hash_value": {
+          "type": "hash",
+          "description": "The MMH3 hash of the favicon (decimal or hex form as observed).",
+          "optional": false,
+          "validator": {
+            "regex": "^-?\\d{1,12}$|^[a-fA-F0-9]{1,16}$"
+          }
+        },
+        "hash_algorithm": {
+          "type": "enum",
+          "description": "Hashing algorithm used.",
+          "optional": true,
+          "enum": ["mmh3", "sha256", "other"]
+        },
+        "favicon_url": {
+          "type": "url",
+          "description": "Where the favicon was fetched from (e.g. /favicon.ico).",
+          "optional": true
+        },
+        "source_url": {
+          "type": "reference",
+          "description": "The site this favicon hash was observed on.",
+          "optional": true,
+          "reference": {
+            "target": "web.url"
+          }
+        },
+        "observed_at": {
+          "type": "datetime",
+          "description": "When the favicon was captured.",
+          "optional": true
+        }
+      }
+    },
+    {
+      "category": "web",
+      "name": "dom_hash",
+      "display_name": "DOM Structure Hash",
+      "description": "A hash of the ordered HTML tag-name sequence of a page — captures template/layout reuse while ignoring volatile content, so phishing kits and cloned storefronts cluster even after text, branding or resources change.",
+      "label_property": "hash_value",
+      "icon": "braces",
+      "color": "#c4b5fd",
+      "properties": {
+        "hash_value": {
+          "type": "hash",
+          "description": "The DOM structure hash (e.g. first 32 hex chars of SHA-256 over the tag sequence).",
+          "optional": false,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{16,64}$"
+          }
+        },
+        "tag_count": {
+          "type": "integer",
+          "description": "Number of tags in the hashed sequence.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "source_url": {
+          "type": "reference",
+          "description": "The page whose DOM structure was hashed.",
+          "optional": true,
+          "reference": {
+            "target": "web.url"
+          }
+        },
+        "observed_at": {
+          "type": "datetime",
+          "description": "When the page was captured.",
           "optional": true
         }
       }
