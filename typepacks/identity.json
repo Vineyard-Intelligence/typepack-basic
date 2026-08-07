@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.identity",
   "content_type": "vineyard:typepack",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "name": "Identity",
   "description": "People, organizations, and the online identities that connect them — personas, email addresses, phone numbers, and social/online accounts — for OSINT persona and attribution work.",
   "authors": [
@@ -14,7 +14,7 @@
   "distribution": {
     "kind": "git",
     "repository": "https://github.com/vineyard-run/typepacks",
-    "ref": "v1.1.0",
+    "ref": "v1.2.0",
     "path": "typepacks/identity.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/identity",
@@ -285,6 +285,73 @@
         }
       },
       "label_template": "{username} · {platform}"
+    },
+    {
+      "category": "identity",
+      "name": "pgp_key",
+      "display_name": "PGP Key",
+      "description": "An OpenPGP public key (certificate) observed in a public key directory — its fingerprint, key material summary, and the identities (User IDs) it binds to email addresses.",
+      "label_property": "fingerprint",
+      "icon": "key",
+      "color": "#fbbf24",
+      "properties": {
+        "fingerprint": {
+          "type": "hash",
+          "description": "OpenPGP key fingerprint (v4: 40-hex SHA-1; v6: 64-hex SHA-256).",
+          "optional": false,
+          "validator": {
+            "regex": "^(?:[a-fA-F0-9]{40}|[a-fA-F0-9]{64})$"
+          }
+        },
+        "key_id": {
+          "type": "string",
+          "description": "Long key ID (v4: last 16 hex of the fingerprint; v6: last 32 hex).",
+          "optional": true,
+          "validator": {
+            "regex": "^(?:[a-fA-F0-9]{16}|[a-fA-F0-9]{32})$"
+          }
+        },
+        "algorithm": {
+          "type": "string",
+          "description": "Primary key algorithm (e.g. rsa, ed25519, cv25519, ecdsa).",
+          "optional": true
+        },
+        "key_size": {
+          "type": "integer",
+          "description": "Key size in bits.",
+          "optional": true
+        },
+        "creation_time": {
+          "type": "datetime",
+          "description": "Key creation timestamp.",
+          "optional": true
+        },
+        "expiration_time": {
+          "type": "datetime",
+          "description": "Key expiration timestamp, if any.",
+          "optional": true
+        },
+        "user_ids": {
+          "type": "text",
+          "description": "User IDs bound to the key, one per line (Name <email>).",
+          "optional": true
+        },
+        "revoked": {
+          "type": "boolean",
+          "description": "Key carries a revocation signature.",
+          "optional": true
+        },
+        "armored_key": {
+          "type": "text",
+          "description": "Full ASCII-armored public key block as fetched.",
+          "optional": true
+        },
+        "sources": {
+          "type": "text",
+          "description": "Directories where the key was found, one per line (keys.openpgp.org, keyserver.ubuntu.com, pgpkeys.eu, keys.mailvelope.com, WKD).",
+          "optional": true
+        }
+      }
     }
   ],
   "edge_types": [
@@ -362,6 +429,19 @@
       ],
       "to": [
         "*"
+      ]
+    },
+    {
+      "category": "identity",
+      "name": "key_bound_to",
+      "label": "key bound to",
+      "display_name": "Key Bound To",
+      "description": "A PGP public key certifies (is bound to) an email address in one of its User IDs.",
+      "from": [
+        "identity.pgp_key"
+      ],
+      "to": [
+        "identity.email_address"
       ]
     },
     {
