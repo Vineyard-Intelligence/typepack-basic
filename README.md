@@ -7,7 +7,7 @@ properties, and the edge types that connect them. No code runs; a Type Pack is d
 | --- | --- | --- |
 | Infrastructure | `run.vineyard.typepacks.infrastructure` | 10 · 11 |
 | Threat | `run.vineyard.typepacks.threat` | 9 · 10 |
-| Identity | `run.vineyard.typepacks.identity` | 5 · 5 |
+| Identity | `run.vineyard.typepacks.identity` | 7 · 7 |
 | Financial | `run.vineyard.typepacks.financial` | 4 · 5 |
 | Endpoint | `run.vineyard.typepacks.endpoint` | 6 · 7 |
 | Geospatial | `run.vineyard.typepacks.geo` | 3 · 3 |
