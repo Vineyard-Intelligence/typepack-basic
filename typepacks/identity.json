@@ -1,9 +1,9 @@
 {
   "identifier": "run.vineyard.typepacks.identity",
   "content_type": "vineyard:typepack",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "name": "Identity",
-  "description": "People, organizations, and the online identities that connect them — personas, email addresses, phone numbers, and social/online accounts — for OSINT persona and attribution work.",
+  "description": "People, organizations, and the online identities that connect them — personas, email addresses, phone numbers, and the accounts they hold on websites — for OSINT persona and attribution work.",
   "authors": [
     {
       "name": "VINEYARD",
@@ -13,8 +13,8 @@
   "license": "Apache-2.0",
   "distribution": {
     "kind": "git",
-    "repository": "https://github.com/vineyard-run/typepacks",
-    "ref": "v1.2.0",
+    "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
+    "ref": "v2.0.0",
     "path": "typepacks/identity.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/identity",
@@ -188,7 +188,7 @@
       "category": "identity",
       "name": "handle",
       "display_name": "Handle",
-      "description": "A name, alias, or nickname used by an as-yet-unidentified person or organization. Use it when a string is all you have: it names the actor without asserting whether they are a person, an organization, or one account. Resolve it into person / organization / user_account nodes as the investigation identifies them.",
+      "description": "A name, alias, or nickname used by an as-yet-unidentified person or organization. Use it when a string is all you have: it names the actor without asserting whether they are a person, an organization, or one account. Resolve it into person / organization / account nodes as the investigation identifies them.",
       "label_property": "handle",
       "icon": "tag",
       "color": "#a78bfa",
@@ -234,9 +234,9 @@
     },
     {
       "category": "identity",
-      "name": "user_account",
-      "display_name": "User Account",
-      "description": "An online or social-media account / handle.",
+      "name": "account",
+      "display_name": "Account",
+      "description": "An account held on a website — a forum, a code host, a marketplace, a game, a social platform, anything with a login. Identified by (username, website), because the same username on two sites is two accounts. Rich social-media profiles with follower graphs and posts belong in the Social typepack's social.account; this is the thin, site-agnostic 'this handle exists here' node that a username sweep produces.",
       "label_property": "username",
       "identity_properties": [
         "username",
@@ -252,8 +252,8 @@
         },
         "platform": {
           "type": "string",
-          "description": "Platform or service (e.g. x, github, telegram).",
-          "optional": true
+          "description": "Website or service the account is held on (e.g. github, reddit, steam, x). Required: it is half the account's identity, and an account with no site is just a name — use identity.handle for that.",
+          "optional": false
         },
         "profile_url": {
           "type": "url",
@@ -367,7 +367,7 @@
         "identity.handle"
       ],
       "to": [
-        "identity.user_account",
+        "identity.account",
         "identity.email_address",
         "identity.phone_number"
       ]
@@ -407,12 +407,12 @@
       "directed": false,
       "from": [
         "identity.person",
-        "identity.user_account",
+        "identity.account",
         "identity.handle"
       ],
       "to": [
         "identity.person",
-        "identity.user_account",
+        "identity.account",
         "identity.handle"
       ]
     },
@@ -456,7 +456,7 @@
       "to": [
         "identity.person",
         "identity.organization",
-        "identity.user_account"
+        "identity.account"
       ]
     }
   ]
