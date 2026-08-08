@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.identity",
   "content_type": "vineyard:typepack",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "name": "Identity",
   "description": "People, organizations, and the online identities that connect them — personas, email addresses, phone numbers, and the accounts they hold on websites — for OSINT persona and attribution work.",
   "authors": [
@@ -14,7 +14,7 @@
   "distribution": {
     "kind": "git",
     "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
-    "ref": "v2.0.0",
+    "ref": "v2.1.0",
     "path": "typepacks/identity.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/identity",
@@ -125,7 +125,8 @@
           "optional": false,
           "validator": {
             "regex": "^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$"
-          }
+          },
+          "case_insensitive": true
         },
         "display_name": {
           "type": "string",
@@ -196,7 +197,8 @@
         "handle": {
           "type": "string",
           "description": "The handle, alias, or nickname as observed.",
-          "optional": false
+          "optional": false,
+          "case_insensitive": true
         },
         "first_seen_context": {
           "type": "text",
@@ -248,12 +250,14 @@
         "username": {
           "type": "string",
           "description": "Username or handle.",
-          "optional": false
+          "optional": false,
+          "case_insensitive": true
         },
         "platform": {
           "type": "string",
           "description": "Website or service the account is held on (e.g. github, reddit, steam, x). Required: it is half the account's identity, and an account with no site is just a name — use identity.handle for that.",
-          "optional": false
+          "optional": false,
+          "case_insensitive": true
         },
         "profile_url": {
           "type": "url",
@@ -301,7 +305,8 @@
           "optional": false,
           "validator": {
             "regex": "^(?:[a-fA-F0-9]{40}|[a-fA-F0-9]{64})$"
-          }
+          },
+          "case_insensitive": true
         },
         "key_id": {
           "type": "string",
@@ -309,7 +314,8 @@
           "optional": true,
           "validator": {
             "regex": "^(?:[a-fA-F0-9]{16}|[a-fA-F0-9]{32})$"
-          }
+          },
+          "case_insensitive": true
         },
         "algorithm": {
           "type": "string",
