@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "name": "Infrastructure",
   "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
   "authors": [
@@ -14,7 +14,7 @@
   "distribution": {
     "kind": "git",
     "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
-    "ref": "v2.1.0",
+    "ref": "v2.2.0",
     "path": "typepacks/infrastructure.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/infrastructure",
@@ -86,7 +86,8 @@
           "optional": false,
           "validator": {
             "regex": "^[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
-          }
+          },
+          "case_insensitive": true
         },
         "registrar": {
           "type": "string",
@@ -227,7 +228,11 @@
           "type": "enum",
           "description": "Hashing algorithm used.",
           "optional": true,
-          "enum": ["mmh3", "sha256", "other"]
+          "enum": [
+            "mmh3",
+            "sha256",
+            "other"
+          ]
         },
         "favicon_url": {
           "type": "url",
@@ -301,7 +306,8 @@
         "hostname": {
           "type": "string",
           "description": "Hostname or FQDN of the host.",
-          "optional": false
+          "optional": false,
+          "case_insensitive": true
         },
         "ip_address": {
           "type": "reference",
@@ -422,7 +428,8 @@
         "record_name": {
           "type": "string",
           "description": "The owner name the record is published under (e.g. www.example.com).",
-          "optional": false
+          "optional": false,
+          "case_insensitive": true
         },
         "record_value": {
           "type": "string",
@@ -576,7 +583,14 @@
           "type": "enum",
           "description": "What kind of technology this is.",
           "optional": true,
-          "enum": ["software", "hardware", "service", "library", "protocol", "unknown"]
+          "enum": [
+            "software",
+            "hardware",
+            "service",
+            "library",
+            "protocol",
+            "unknown"
+          ]
         },
         "vendor": {
           "type": "string",
