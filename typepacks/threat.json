@@ -89,13 +89,7 @@
           "enum": ["planned", "active", "dormant", "concluded", "failed"]
         },
         "start_date": { "type": "date", "description": "Operation start date.", "optional": true },
-        "end_date": { "type": "date", "description": "Operation end date.", "optional": true },
-        "campaign": {
-          "type": "reference",
-          "description": "The parent campaign this operation belongs to.",
-          "optional": true,
-          "reference": { "target": "threat.campaign" }
-        }
+        "end_date": { "type": "date", "description": "Operation end date.", "optional": true }
       }
     },
     {
