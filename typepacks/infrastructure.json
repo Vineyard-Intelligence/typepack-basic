@@ -197,14 +197,6 @@
           "description": "Server / framework hint observed alongside the headers (e.g. nginx, cloudflare).",
           "optional": true
         },
-        "source_url": {
-          "type": "reference",
-          "description": "The URL this header hash was observed on.",
-          "optional": true,
-          "reference": {
-            "target": "web.url"
-          }
-        },
         "observed_at": {
           "type": "datetime",
           "description": "When the headers were captured.",
@@ -244,14 +236,6 @@
           "description": "Where the favicon was fetched from (e.g. /favicon.ico).",
           "optional": true
         },
-        "source_url": {
-          "type": "reference",
-          "description": "The site this favicon hash was observed on.",
-          "optional": true,
-          "reference": {
-            "target": "web.url"
-          }
-        },
         "observed_at": {
           "type": "datetime",
           "description": "When the favicon was captured.",
@@ -284,14 +268,6 @@
             "min": 0
           }
         },
-        "source_url": {
-          "type": "reference",
-          "description": "The page whose DOM structure was hashed.",
-          "optional": true,
-          "reference": {
-            "target": "web.url"
-          }
-        },
         "observed_at": {
           "type": "datetime",
           "description": "When the page was captured.",
@@ -313,14 +289,6 @@
           "description": "Hostname or FQDN of the host.",
           "optional": false,
           "case_insensitive": true
-        },
-        "ip_address": {
-          "type": "reference",
-          "description": "Primary IP address of the host.",
-          "optional": true,
-          "reference": {
-            "target": "infrastructure.ip_address"
-          }
         },
         "operating_system": {
           "type": "string",
