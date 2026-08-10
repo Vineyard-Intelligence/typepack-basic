@@ -134,12 +134,9 @@
           }
         },
         "domain": {
-          "type": "reference",
-          "description": "The domain this URL belongs to.",
-          "optional": true,
-          "reference": {
-            "target": "infrastructure.domain"
-          }
+          "type": "string",
+          "description": "Hostname this URL sits on, e.g. example.com. A plain value, not a link to a domain node — draw an edge for that.",
+          "optional": true
         },
         "http_status": {
           "type": "integer",
@@ -159,6 +156,14 @@
           "type": "url",
           "description": "Final URL after following redirects.",
           "optional": true
+        },
+        "original_url": {
+          "type": "url",
+          "description": "For an archived copy, the URL that was archived. Readable out of a Wayback replay URL, but not without parsing it.",
+          "optional": true,
+          "validator": {
+            "regex": "^(https?|ftp):\\/\\/[^\\s/$.?#].[^\\s]*$"
+          }
         }
       }
     },
