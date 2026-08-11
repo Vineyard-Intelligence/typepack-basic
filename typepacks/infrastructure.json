@@ -82,10 +82,10 @@
       "properties": {
         "domain_name": {
           "type": "string",
-          "description": "The fully qualified domain name.",
+          "description": "The fully qualified domain name. Underscored labels (_dmarc, _domainkey, _acme-challenge, _tcp) are ordinary names here — RFC 8552 reserves them for service metadata and passive-DNS sources return them constantly.",
           "optional": false,
           "validator": {
-            "regex": "^[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+            "regex": "^[a-zA-Z0-9._-]+\\.[a-zA-Z]{2,}$"
           },
           "case_insensitive": true
         },
