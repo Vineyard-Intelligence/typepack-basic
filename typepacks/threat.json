@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.threat",
   "content_type": "vineyard:typepack",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "name": "Threat",
   "description": "Threat-intelligence entities (malware, campaigns, operations, vulnerabilities, threat actors, indicators, attack patterns, tools, detection signatures) and their relationships, aligned with STIX 2.1 concepts.",
   "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
@@ -44,6 +44,28 @@
         "aliases": { "type": "text", "description": "Other names the malware is tracked under.", "optional": true },
         "first_seen": { "type": "datetime", "description": "First observation timestamp.", "optional": true },
         "last_seen": { "type": "datetime", "description": "Most recent observation timestamp.", "optional": true }
+      }
+    },
+    {
+      "category": "threat",
+      "name": "file_hash",
+      "display_name": "File Hash",
+      "description": "A file sample identified by its hashes, with reputation data from an external scanner (e.g. VirusTotal). Identity is the SHA-256 — two samples with the same hash are the same file.",
+      "label_property": "sha256",
+      "icon": "file-digit",
+      "color": "#fca5a5",
+      "properties": {
+        "sha256": { "type": "hash", "description": "SHA-256 of the file.", "optional": false, "validator": { "regex": "^[a-fA-F0-9]{64}$" } },
+        "sha1": { "type": "hash", "description": "SHA-1 of the file.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{40}$" } },
+        "md5": { "type": "hash", "description": "MD5 of the file.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{32}$" } },
+        "size": { "type": "integer", "description": "File size in bytes.", "optional": true, "validator": { "min": 0 } },
+        "type_description": { "type": "string", "description": "Vendor type description, e.g. \"Win32 EXE\" or \"PDF document\".", "optional": true },
+        "tags": { "type": "text", "description": "Scanner-assigned tags (comma-separated).", "optional": true },
+        "malicious_count": { "type": "integer", "description": "Number of engines that flagged the file malicious.", "optional": true, "validator": { "min": 0 } },
+        "suspicious_count": { "type": "integer", "description": "Number of engines that flagged the file suspicious.", "optional": true, "validator": { "min": 0 } },
+        "undetected_count": { "type": "integer", "description": "Number of engines that did not detect the file.", "optional": true, "validator": { "min": 0 } },
+        "times_submitted": { "type": "integer", "description": "Number of times the file has been submitted to the scanner.", "optional": true, "validator": { "min": 0 } },
+        "first_seen": { "type": "datetime", "description": "First observation timestamp.", "optional": true }
       }
     },
     {
