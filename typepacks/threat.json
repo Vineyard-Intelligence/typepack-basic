@@ -4,7 +4,12 @@
   "version": "1.3.0",
   "name": "Threat",
   "description": "Threat-intelligence entities (malware, campaigns, operations, vulnerabilities, threat actors, indicators, attack patterns, tools, detection signatures) and their relationships, aligned with STIX 2.1 concepts.",
-  "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
+  "authors": [
+    {
+      "name": "VINEYARD",
+      "url": "https://vineyard.run"
+    }
+  ],
   "license": "Apache-2.0",
   "distribution": {
     "kind": "git",
@@ -24,48 +29,180 @@
       "icon": "bug",
       "color": "#f87171",
       "properties": {
-        "name": { "type": "string", "description": "Malware name or family.", "optional": false },
+        "name": {
+          "type": "string",
+          "description": "Malware name or family.",
+          "optional": false
+        },
         "malware_type": {
           "type": "enum",
           "description": "Malware classification.",
           "optional": false,
-          "enum": ["trojan", "ransomware", "worm", "loader", "backdoor", "rat", "stealer", "rootkit", "botnet", "downloader", "wiper", "spyware", "adware", "other", "unknown"]
+          "enum": [
+            "trojan",
+            "ransomware",
+            "worm",
+            "loader",
+            "backdoor",
+            "rat",
+            "stealer",
+            "rootkit",
+            "botnet",
+            "downloader",
+            "wiper",
+            "spyware",
+            "adware",
+            "other",
+            "unknown"
+          ]
         },
         "platform": {
           "type": "enum",
           "description": "Targeted platform.",
           "optional": true,
-          "enum": ["windows", "linux", "macos", "android", "ios", "multi"]
+          "enum": [
+            "windows",
+            "linux",
+            "macos",
+            "android",
+            "ios",
+            "multi"
+          ]
         },
-        "is_family": { "type": "boolean", "description": "True if this represents a family rather than a single sample.", "optional": true },
-        "hash_md5": { "type": "hash", "description": "MD5 hash of the sample.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{32}$" } },
-        "hash_sha1": { "type": "hash", "description": "SHA-1 hash of the sample.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{40}$" } },
-        "hash_sha256": { "type": "hash", "description": "SHA-256 hash of the sample.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{64}$" } },
-        "aliases": { "type": "text", "description": "Other names the malware is tracked under.", "optional": true },
-        "first_seen": { "type": "datetime", "description": "First observation timestamp.", "optional": true },
-        "last_seen": { "type": "datetime", "description": "Most recent observation timestamp.", "optional": true }
+        "is_family": {
+          "type": "boolean",
+          "description": "True if this represents a family rather than a single sample.",
+          "optional": true
+        },
+        "hash_md5": {
+          "type": "hash",
+          "description": "MD5 hash of the sample.",
+          "optional": true,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{32}$"
+          }
+        },
+        "hash_sha1": {
+          "type": "hash",
+          "description": "SHA-1 hash of the sample.",
+          "optional": true,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{40}$"
+          }
+        },
+        "hash_sha256": {
+          "type": "hash",
+          "description": "SHA-256 hash of the sample.",
+          "optional": true,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{64}$"
+          }
+        },
+        "aliases": {
+          "type": "text",
+          "description": "Other names the malware is tracked under.",
+          "optional": true
+        },
+        "first_seen": {
+          "type": "datetime",
+          "description": "First observation timestamp.",
+          "optional": true
+        },
+        "last_seen": {
+          "type": "datetime",
+          "description": "Most recent observation timestamp.",
+          "optional": true
+        }
       }
     },
     {
       "category": "threat",
       "name": "file_hash",
       "display_name": "File Hash",
-      "description": "A file sample identified by its hashes, with reputation data from an external scanner (e.g. VirusTotal). Identity is the SHA-256 — two samples with the same hash are the same file.",
+      "description": "A scanner’s verdict on one sample, identified by its SHA-256 — the reputation counts here belong to a named product (VirusTotal and the like), not to the file itself. NOT the same thing as endpoint.file, which is a file seen at a place on a host: link the two with an edge rather than merging them. Two verdicts on the same hash are the same node.",
       "label_property": "sha256",
       "icon": "file-digit",
       "color": "#fca5a5",
       "properties": {
-        "sha256": { "type": "hash", "description": "SHA-256 of the file.", "optional": false, "validator": { "regex": "^[a-fA-F0-9]{64}$" } },
-        "sha1": { "type": "hash", "description": "SHA-1 of the file.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{40}$" } },
-        "md5": { "type": "hash", "description": "MD5 of the file.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{32}$" } },
-        "size": { "type": "integer", "description": "File size in bytes.", "optional": true, "validator": { "min": 0 } },
-        "type_description": { "type": "string", "description": "Vendor type description, e.g. \"Win32 EXE\" or \"PDF document\".", "optional": true },
-        "tags": { "type": "text", "description": "Scanner-assigned tags (comma-separated).", "optional": true },
-        "malicious_count": { "type": "integer", "description": "Number of engines that flagged the file malicious.", "optional": true, "validator": { "min": 0 } },
-        "suspicious_count": { "type": "integer", "description": "Number of engines that flagged the file suspicious.", "optional": true, "validator": { "min": 0 } },
-        "undetected_count": { "type": "integer", "description": "Number of engines that did not detect the file.", "optional": true, "validator": { "min": 0 } },
-        "times_submitted": { "type": "integer", "description": "Number of times the file has been submitted to the scanner.", "optional": true, "validator": { "min": 0 } },
-        "first_seen": { "type": "datetime", "description": "First observation timestamp.", "optional": true }
+        "sha256": {
+          "type": "hash",
+          "description": "SHA-256 of the file.",
+          "optional": false,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{64}$"
+          }
+        },
+        "sha1": {
+          "type": "hash",
+          "description": "SHA-1 of the file.",
+          "optional": true,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{40}$"
+          }
+        },
+        "md5": {
+          "type": "hash",
+          "description": "MD5 of the file.",
+          "optional": true,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{32}$"
+          }
+        },
+        "size": {
+          "type": "integer",
+          "description": "File size in bytes.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "type_description": {
+          "type": "string",
+          "description": "Vendor type description, e.g. \"Win32 EXE\" or \"PDF document\".",
+          "optional": true
+        },
+        "tags": {
+          "type": "text",
+          "description": "Scanner-assigned tags (comma-separated).",
+          "optional": true
+        },
+        "malicious_count": {
+          "type": "integer",
+          "description": "Number of engines that flagged the file malicious.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "suspicious_count": {
+          "type": "integer",
+          "description": "Number of engines that flagged the file suspicious.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "undetected_count": {
+          "type": "integer",
+          "description": "Number of engines that did not detect the file.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "times_submitted": {
+          "type": "integer",
+          "description": "Number of times the file has been submitted to the scanner.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "first_seen": {
+          "type": "datetime",
+          "description": "First observation timestamp.",
+          "optional": true
+        }
       }
     },
     {
@@ -77,19 +214,51 @@
       "icon": "target",
       "color": "#fb923c",
       "properties": {
-        "campaign_name": { "type": "string", "description": "Campaign name.", "optional": false },
-        "description": { "type": "text", "description": "Summary of the campaign.", "optional": true },
-        "objective": { "type": "string", "description": "Goal of the campaign (e.g. espionage, financial theft).", "optional": true },
+        "campaign_name": {
+          "type": "string",
+          "description": "Campaign name.",
+          "optional": false
+        },
+        "description": {
+          "type": "text",
+          "description": "Summary of the campaign.",
+          "optional": true
+        },
+        "objective": {
+          "type": "string",
+          "description": "Goal of the campaign (e.g. espionage, financial theft).",
+          "optional": true
+        },
         "status": {
           "type": "enum",
           "description": "Current campaign status.",
           "optional": true,
-          "enum": ["active", "dormant", "concluded"]
+          "enum": [
+            "active",
+            "dormant",
+            "concluded"
+          ]
         },
-        "first_seen": { "type": "datetime", "description": "First observed activity.", "optional": true },
-        "start_date": { "type": "date", "description": "Campaign start date.", "optional": true },
-        "end_date": { "type": "date", "description": "Campaign end date.", "optional": true },
-        "attribution": { "type": "string", "description": "Suspected actor or group.", "optional": true }
+        "first_seen": {
+          "type": "datetime",
+          "description": "First observed activity.",
+          "optional": true
+        },
+        "start_date": {
+          "type": "date",
+          "description": "Campaign start date.",
+          "optional": true
+        },
+        "end_date": {
+          "type": "date",
+          "description": "Campaign end date.",
+          "optional": true
+        },
+        "attribution": {
+          "type": "string",
+          "description": "Suspected actor or group.",
+          "optional": true
+        }
       }
     },
     {
@@ -101,17 +270,43 @@
       "icon": "crosshair",
       "color": "#f97316",
       "properties": {
-        "operation_name": { "type": "string", "description": "Operation name or designator.", "optional": false },
-        "description": { "type": "text", "description": "Summary of the operation.", "optional": true },
-        "objective": { "type": "string", "description": "Goal of this specific operation.", "optional": true },
+        "operation_name": {
+          "type": "string",
+          "description": "Operation name or designator.",
+          "optional": false
+        },
+        "description": {
+          "type": "text",
+          "description": "Summary of the operation.",
+          "optional": true
+        },
+        "objective": {
+          "type": "string",
+          "description": "Goal of this specific operation.",
+          "optional": true
+        },
         "status": {
           "type": "enum",
           "description": "Current operation status.",
           "optional": true,
-          "enum": ["planned", "active", "dormant", "concluded", "failed"]
+          "enum": [
+            "planned",
+            "active",
+            "dormant",
+            "concluded",
+            "failed"
+          ]
         },
-        "start_date": { "type": "date", "description": "Operation start date.", "optional": true },
-        "end_date": { "type": "date", "description": "Operation end date.", "optional": true }
+        "start_date": {
+          "type": "date",
+          "description": "Operation start date.",
+          "optional": true
+        },
+        "end_date": {
+          "type": "date",
+          "description": "Operation end date.",
+          "optional": true
+        }
       }
     },
     {
@@ -123,29 +318,68 @@
       "icon": "venetian-mask",
       "color": "#c084fc",
       "properties": {
-        "actor_name": { "type": "string", "description": "Primary actor name or designator.", "optional": false },
-        "description": { "type": "text", "description": "Profile of the actor.", "optional": true },
+        "actor_name": {
+          "type": "string",
+          "description": "Primary actor name or designator.",
+          "optional": false
+        },
+        "description": {
+          "type": "text",
+          "description": "Profile of the actor.",
+          "optional": true
+        },
         "actor_type": {
           "type": "enum",
           "description": "Category of the actor.",
           "optional": true,
-          "enum": ["nation-state", "cybercriminal", "hacktivist", "insider", "terrorist", "unknown"]
+          "enum": [
+            "nation-state",
+            "cybercriminal",
+            "hacktivist",
+            "insider",
+            "terrorist",
+            "unknown"
+          ]
         },
         "motivation": {
           "type": "enum",
           "description": "Primary motivation.",
           "optional": true,
-          "enum": ["espionage", "financial", "ideological", "destructive", "notoriety", "unknown"]
+          "enum": [
+            "espionage",
+            "financial",
+            "ideological",
+            "destructive",
+            "notoriety",
+            "unknown"
+          ]
         },
         "sophistication": {
           "type": "enum",
           "description": "Assessed capability level.",
           "optional": true,
-          "enum": ["minimal", "intermediate", "advanced", "strategic"]
+          "enum": [
+            "minimal",
+            "intermediate",
+            "advanced",
+            "strategic"
+          ]
         },
-        "country": { "type": "string", "description": "Suspected country of origin.", "optional": true },
-        "known_aliases": { "type": "text", "description": "Known aliases / tracked names.", "optional": true },
-        "first_seen": { "type": "date", "description": "First attributed activity.", "optional": true }
+        "country": {
+          "type": "string",
+          "description": "Suspected country of origin.",
+          "optional": true
+        },
+        "known_aliases": {
+          "type": "text",
+          "description": "Known aliases / tracked names.",
+          "optional": true
+        },
+        "first_seen": {
+          "type": "date",
+          "description": "First attributed activity.",
+          "optional": true
+        }
       }
     },
     {
@@ -161,21 +395,64 @@
           "type": "string",
           "description": "CVE identifier.",
           "optional": false,
-          "validator": { "regex": "^CVE-\\d{4}-\\d{4,}$" }
+          "validator": {
+            "regex": "^CVE-\\d{4}-\\d{4,}$"
+          }
         },
-        "cvss_score": { "type": "number", "description": "CVSS base score.", "optional": true, "validator": { "min": 0, "max": 10 } },
+        "cvss_score": {
+          "type": "number",
+          "description": "CVSS base score.",
+          "optional": true,
+          "validator": {
+            "min": 0,
+            "max": 10
+          }
+        },
         "severity": {
           "type": "enum",
           "description": "Qualitative severity rating.",
           "optional": true,
-          "enum": ["none", "low", "medium", "high", "critical"]
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
         },
-        "cvss_vector": { "type": "string", "description": "CVSS vector string.", "optional": true },
-        "cwe_id": { "type": "string", "description": "Associated CWE weakness identifier.", "optional": true, "validator": { "regex": "^CWE-\\d+$" } },
-        "exploited_in_wild": { "type": "boolean", "description": "Known to be exploited in the wild.", "optional": true },
-        "affected_product": { "type": "string", "description": "Affected product or component.", "optional": true },
-        "description": { "type": "text", "description": "Vulnerability description.", "optional": true },
-        "published_date": { "type": "date", "description": "Publication date.", "optional": true }
+        "cvss_vector": {
+          "type": "string",
+          "description": "CVSS vector string.",
+          "optional": true
+        },
+        "cwe_id": {
+          "type": "string",
+          "description": "Associated CWE weakness identifier.",
+          "optional": true,
+          "validator": {
+            "regex": "^CWE-\\d+$"
+          }
+        },
+        "exploited_in_wild": {
+          "type": "boolean",
+          "description": "Known to be exploited in the wild.",
+          "optional": true
+        },
+        "affected_product": {
+          "type": "string",
+          "description": "Affected product or component.",
+          "optional": true
+        },
+        "description": {
+          "type": "text",
+          "description": "Vulnerability description.",
+          "optional": true
+        },
+        "published_date": {
+          "type": "date",
+          "description": "Publication date.",
+          "optional": true
+        }
       }
     },
     {
@@ -187,21 +464,49 @@
       "icon": "crosshair",
       "color": "#fb7185",
       "properties": {
-        "value": { "type": "string", "description": "The indicator value.", "optional": false },
+        "value": {
+          "type": "string",
+          "description": "The indicator value.",
+          "optional": false
+        },
         "indicator_type": {
           "type": "enum",
           "description": "What kind of artifact the value is.",
           "optional": true,
-          "enum": ["ipv4", "ipv6", "domain", "url", "md5", "sha1", "sha256", "email", "filename", "registry_key", "mutex"]
+          "enum": [
+            "ipv4",
+            "ipv6",
+            "domain",
+            "url",
+            "md5",
+            "sha1",
+            "sha256",
+            "email",
+            "filename",
+            "registry_key",
+            "mutex"
+          ]
         },
         "confidence": {
           "type": "enum",
           "description": "Analyst confidence in the indicator.",
           "optional": true,
-          "enum": ["low", "medium", "high"]
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
         },
-        "valid_from": { "type": "datetime", "description": "Time from which the indicator is considered valid.", "optional": true },
-        "description": { "type": "text", "description": "Context for the indicator.", "optional": true }
+        "valid_from": {
+          "type": "datetime",
+          "description": "Time from which the indicator is considered valid.",
+          "optional": true
+        },
+        "description": {
+          "type": "text",
+          "description": "Context for the indicator.",
+          "optional": true
+        }
       }
     },
     {
@@ -213,15 +518,45 @@
       "icon": "swords",
       "color": "#f472b6",
       "properties": {
-        "name": { "type": "string", "description": "Technique name.", "optional": false },
-        "technique_id": { "type": "string", "description": "MITRE ATT&CK technique ID.", "optional": true, "validator": { "regex": "^T\\d{4}(\\.\\d{3})?$" } },
+        "name": {
+          "type": "string",
+          "description": "Technique name.",
+          "optional": false
+        },
+        "technique_id": {
+          "type": "string",
+          "description": "MITRE ATT&CK technique ID.",
+          "optional": true,
+          "validator": {
+            "regex": "^T\\d{4}(\\.\\d{3})?$"
+          }
+        },
         "tactic": {
           "type": "enum",
           "description": "ATT&CK tactic (kill-chain phase).",
           "optional": true,
-          "enum": ["reconnaissance", "resource-development", "initial-access", "execution", "persistence", "privilege-escalation", "defense-evasion", "credential-access", "discovery", "lateral-movement", "collection", "command-and-control", "exfiltration", "impact"]
+          "enum": [
+            "reconnaissance",
+            "resource-development",
+            "initial-access",
+            "execution",
+            "persistence",
+            "privilege-escalation",
+            "defense-evasion",
+            "credential-access",
+            "discovery",
+            "lateral-movement",
+            "collection",
+            "command-and-control",
+            "exfiltration",
+            "impact"
+          ]
         },
-        "description": { "type": "text", "description": "How the technique works.", "optional": true }
+        "description": {
+          "type": "text",
+          "description": "How the technique works.",
+          "optional": true
+        }
       }
     },
     {
@@ -233,15 +568,36 @@
       "icon": "wrench",
       "color": "#fdba74",
       "properties": {
-        "name": { "type": "string", "description": "Tool name.", "optional": false },
+        "name": {
+          "type": "string",
+          "description": "Tool name.",
+          "optional": false
+        },
         "tool_type": {
           "type": "enum",
           "description": "Functional category of the tool.",
           "optional": true,
-          "enum": ["c2", "rat", "loader", "stealer", "exploitation", "post-exploitation", "recon", "utility"]
+          "enum": [
+            "c2",
+            "rat",
+            "loader",
+            "stealer",
+            "exploitation",
+            "post-exploitation",
+            "recon",
+            "utility"
+          ]
         },
-        "aliases": { "type": "text", "description": "Other names for the tool.", "optional": true },
-        "description": { "type": "text", "description": "What the tool does.", "optional": true }
+        "aliases": {
+          "type": "text",
+          "description": "Other names for the tool.",
+          "optional": true
+        },
+        "description": {
+          "type": "text",
+          "description": "What the tool does.",
+          "optional": true
+        }
       }
     },
     {
@@ -253,15 +609,33 @@
       "icon": "scan-line",
       "color": "#a3e635",
       "properties": {
-        "name": { "type": "string", "description": "Rule name.", "optional": false },
+        "name": {
+          "type": "string",
+          "description": "Rule name.",
+          "optional": false
+        },
         "signature_type": {
           "type": "enum",
           "description": "Detection engine the rule targets.",
           "optional": true,
-          "enum": ["yara", "sigma", "snort", "suricata", "clamav"]
+          "enum": [
+            "yara",
+            "sigma",
+            "snort",
+            "suricata",
+            "clamav"
+          ]
         },
-        "rule": { "type": "text", "description": "The rule body.", "optional": true },
-        "description": { "type": "text", "description": "What the rule detects.", "optional": true }
+        "rule": {
+          "type": "text",
+          "description": "The rule body.",
+          "optional": true
+        },
+        "description": {
+          "type": "text",
+          "description": "What the rule detects.",
+          "optional": true
+        }
       }
     }
   ],
@@ -272,8 +646,16 @@
       "label": "uses",
       "display_name": "Uses",
       "description": "An actor, campaign, or operation uses malware, a tool, or an attack pattern.",
-      "from": ["threat.threat_actor", "threat.campaign", "threat.operation"],
-      "to": ["threat.malware", "threat.tool", "threat.attack_pattern"]
+      "from": [
+        "threat.threat_actor",
+        "threat.campaign",
+        "threat.operation"
+      ],
+      "to": [
+        "threat.malware",
+        "threat.tool",
+        "threat.attack_pattern"
+      ]
     },
     {
       "category": "threat",
@@ -281,8 +663,13 @@
       "label": "attributed to",
       "display_name": "Attributed To",
       "description": "A campaign or operation is attributed to a threat actor.",
-      "from": ["threat.campaign", "threat.operation"],
-      "to": ["threat.threat_actor"]
+      "from": [
+        "threat.campaign",
+        "threat.operation"
+      ],
+      "to": [
+        "threat.threat_actor"
+      ]
     },
     {
       "category": "threat",
@@ -290,8 +677,12 @@
       "label": "part of",
       "display_name": "Part Of",
       "description": "An operation is part of a broader campaign.",
-      "from": ["threat.operation"],
-      "to": ["threat.campaign"]
+      "from": [
+        "threat.operation"
+      ],
+      "to": [
+        "threat.campaign"
+      ]
     },
     {
       "category": "threat",
@@ -299,8 +690,14 @@
       "label": "targets",
       "display_name": "Targets",
       "description": "An actor, campaign, or operation targets a victim entity (org, sector, asset).",
-      "from": ["threat.threat_actor", "threat.campaign", "threat.operation"],
-      "to": ["*"]
+      "from": [
+        "threat.threat_actor",
+        "threat.campaign",
+        "threat.operation"
+      ],
+      "to": [
+        "*"
+      ]
     },
     {
       "category": "threat",
@@ -308,8 +705,15 @@
       "label": "exploits",
       "display_name": "Exploits",
       "description": "Malware, a campaign, an operation, or a technique exploits a vulnerability.",
-      "from": ["threat.malware", "threat.campaign", "threat.operation", "threat.attack_pattern"],
-      "to": ["threat.vulnerability"]
+      "from": [
+        "threat.malware",
+        "threat.campaign",
+        "threat.operation",
+        "threat.attack_pattern"
+      ],
+      "to": [
+        "threat.vulnerability"
+      ]
     },
     {
       "category": "threat",
@@ -317,8 +721,16 @@
       "label": "indicates",
       "display_name": "Indicates",
       "description": "An indicator points to malware, a campaign, an operation, an actor, or a technique.",
-      "from": ["threat.indicator"],
-      "to": ["threat.malware", "threat.campaign", "threat.operation", "threat.threat_actor", "threat.attack_pattern"]
+      "from": [
+        "threat.indicator"
+      ],
+      "to": [
+        "threat.malware",
+        "threat.campaign",
+        "threat.operation",
+        "threat.threat_actor",
+        "threat.attack_pattern"
+      ]
     },
     {
       "category": "threat",
@@ -326,8 +738,12 @@
       "label": "variant of",
       "display_name": "Variant Of",
       "description": "A malware sample or family is a variant of another.",
-      "from": ["threat.malware"],
-      "to": ["threat.malware"]
+      "from": [
+        "threat.malware"
+      ],
+      "to": [
+        "threat.malware"
+      ]
     },
     {
       "category": "threat",
@@ -335,8 +751,14 @@
       "label": "detects",
       "display_name": "Detects",
       "description": "A detection signature detects malware, an indicator, or a technique.",
-      "from": ["threat.signature"],
-      "to": ["threat.malware", "threat.indicator", "threat.attack_pattern"]
+      "from": [
+        "threat.signature"
+      ],
+      "to": [
+        "threat.malware",
+        "threat.indicator",
+        "threat.attack_pattern"
+      ]
     },
     {
       "category": "threat",
@@ -344,8 +766,13 @@
       "label": "communicates with",
       "display_name": "Communicates With",
       "description": "Malware or a tool communicates with infrastructure (C2, beacon, drop).",
-      "from": ["threat.malware", "threat.tool"],
-      "to": ["*"]
+      "from": [
+        "threat.malware",
+        "threat.tool"
+      ],
+      "to": [
+        "*"
+      ]
     },
     {
       "category": "threat",
@@ -353,8 +780,12 @@
       "label": "refers to",
       "display_name": "Refers To",
       "description": "An indicator refers to the concrete typed node (in any pack) that it identifies.",
-      "from": ["threat.indicator"],
-      "to": ["*"]
+      "from": [
+        "threat.indicator"
+      ],
+      "to": [
+        "*"
+      ]
     }
   ]
 }

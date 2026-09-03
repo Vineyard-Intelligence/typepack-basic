@@ -1,10 +1,15 @@
 {
   "identifier": "run.vineyard.typepacks.endpoint",
   "content_type": "vineyard:typepack",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "Endpoint",
   "description": "Host and endpoint forensic artifacts (files, processes, registry keys, services, mutexes, scheduled tasks) for DFIR and malware-behavior mapping.",
-  "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
+  "authors": [
+    {
+      "name": "VINEYARD",
+      "url": "https://vineyard.run"
+    }
+  ],
   "license": "Apache-2.0",
   "distribution": {
     "kind": "git",
@@ -19,19 +24,70 @@
       "category": "endpoint",
       "name": "file",
       "display_name": "File",
-      "description": "A file artifact observed on a host, with hashes and path.",
+      "description": "A file artifact observed on a host, with hashes and path. Identified by its content and where it was seen — two files with the same name on different machines are two nodes. For a scanner’s verdict on a sample, see threat.file_hash.",
       "label_property": "file_name",
       "icon": "file-text",
       "color": "#94a3b8",
       "properties": {
-        "file_name": { "type": "string", "description": "File name.", "optional": false },
-        "file_path": { "type": "string", "description": "Full path on disk.", "optional": true },
-        "sha256": { "type": "hash", "description": "SHA-256 of the file.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{64}$" } },
-        "md5": { "type": "hash", "description": "MD5 of the file.", "optional": true, "validator": { "regex": "^[a-fA-F0-9]{32}$" } },
-        "size_bytes": { "type": "integer", "description": "File size in bytes.", "optional": true, "validator": { "min": 0 } },
-        "mime_type": { "type": "string", "description": "MIME / content type.", "optional": true },
-        "signed": { "type": "boolean", "description": "Whether the file is digitally signed.", "optional": true }
-      }
+        "file_name": {
+          "type": "string",
+          "description": "File name.",
+          "optional": false
+        },
+        "file_path": {
+          "type": "string",
+          "description": "Full path on disk.",
+          "optional": true
+        },
+        "sha256": {
+          "type": "hash",
+          "description": "SHA-256 of the file.",
+          "optional": true,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{64}$"
+          },
+          "case_insensitive": true
+        },
+        "md5": {
+          "type": "hash",
+          "description": "MD5 of the file.",
+          "optional": true,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{32}$"
+          }
+        },
+        "size_bytes": {
+          "type": "integer",
+          "description": "File size in bytes.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "mime_type": {
+          "type": "string",
+          "description": "MIME / content type.",
+          "optional": true
+        },
+        "signed": {
+          "type": "boolean",
+          "description": "Whether the file is digitally signed.",
+          "optional": true
+        },
+        "hostname": {
+          "type": "string",
+          "description": "Host the file was observed on. Part of the identity: the same name and path on two machines is two files, and this type has no other way to tell them apart. Blank when the source does not say.",
+          "optional": true,
+          "case_insensitive": true
+        }
+      },
+      "identity_properties": [
+        "sha256",
+        "file_name",
+        "file_path",
+        "hostname"
+      ],
+      "label_template": "{file_name} · {hostname}"
     },
     {
       "category": "endpoint",
@@ -42,14 +98,53 @@
       "icon": "cpu",
       "color": "#818cf8",
       "properties": {
-        "process_name": { "type": "string", "description": "Process image name.", "optional": false },
-        "process_guid": { "type": "string", "description": "Stable per-execution id (e.g. Sysmon/EDR ProcessGuid) — the reliable process identity, since image names and PIDs both recur.", "optional": true },
-        "pid": { "type": "integer", "description": "Process identifier.", "optional": true, "validator": { "min": 0 } },
-        "parent_pid": { "type": "integer", "description": "Parent process identifier.", "optional": true, "validator": { "min": 0 } },
-        "command_line": { "type": "text", "description": "Full command line.", "optional": true },
-        "user": { "type": "string", "description": "User the process ran as.", "optional": true },
-        "start_time": { "type": "datetime", "description": "Process start time.", "optional": true }
-      }
+        "process_name": {
+          "type": "string",
+          "description": "Process image name.",
+          "optional": false
+        },
+        "process_guid": {
+          "type": "string",
+          "description": "Stable per-execution id (e.g. Sysmon/EDR ProcessGuid) — the reliable process identity, since image names and PIDs both recur.",
+          "optional": true
+        },
+        "pid": {
+          "type": "integer",
+          "description": "Process identifier.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "parent_pid": {
+          "type": "integer",
+          "description": "Parent process identifier.",
+          "optional": true,
+          "validator": {
+            "min": 0
+          }
+        },
+        "command_line": {
+          "type": "text",
+          "description": "Full command line.",
+          "optional": true
+        },
+        "user": {
+          "type": "string",
+          "description": "User the process ran as.",
+          "optional": true
+        },
+        "start_time": {
+          "type": "datetime",
+          "description": "Process start time.",
+          "optional": true
+        }
+      },
+      "identity_properties": [
+        "process_guid",
+        "process_name",
+        "pid"
+      ]
     },
     {
       "category": "endpoint",
@@ -60,16 +155,38 @@
       "icon": "key",
       "color": "#f87171",
       "properties": {
-        "key_path": { "type": "string", "description": "Full registry key path.", "optional": false },
+        "key_path": {
+          "type": "string",
+          "description": "Full registry key path.",
+          "optional": false
+        },
         "hive": {
           "type": "enum",
           "description": "Registry hive.",
           "optional": true,
-          "enum": ["HKLM", "HKCU", "HKCR", "HKU", "HKCC"]
+          "enum": [
+            "HKLM",
+            "HKCU",
+            "HKCR",
+            "HKU",
+            "HKCC"
+          ]
         },
-        "value_name": { "type": "string", "description": "Value name under the key.", "optional": true },
-        "value_data": { "type": "text", "description": "Value data.", "optional": true }
-      }
+        "value_name": {
+          "type": "string",
+          "description": "Value name under the key.",
+          "optional": true
+        },
+        "value_data": {
+          "type": "text",
+          "description": "Value data.",
+          "optional": true
+        }
+      },
+      "identity_properties": [
+        "key_path",
+        "value_name"
+      ]
     },
     {
       "category": "endpoint",
@@ -80,22 +197,52 @@
       "icon": "cog",
       "color": "#fb923c",
       "properties": {
-        "service_name": { "type": "string", "description": "Service name.", "optional": false },
-        "display_name": { "type": "string", "description": "Service display name.", "optional": true },
-        "binary_path": { "type": "string", "description": "Path to the service binary.", "optional": true },
+        "service_name": {
+          "type": "string",
+          "description": "Service name.",
+          "optional": false
+        },
+        "display_name": {
+          "type": "string",
+          "description": "Service display name.",
+          "optional": true
+        },
+        "binary_path": {
+          "type": "string",
+          "description": "Path to the service binary.",
+          "optional": true
+        },
         "start_type": {
           "type": "enum",
           "description": "Start configuration.",
           "optional": true,
-          "enum": ["auto", "manual", "disabled", "boot", "system"]
+          "enum": [
+            "auto",
+            "manual",
+            "disabled",
+            "boot",
+            "system"
+          ]
         },
         "state": {
           "type": "enum",
           "description": "Current run state.",
           "optional": true,
-          "enum": ["running", "stopped", "paused", "start_pending", "stop_pending", "pause_pending", "continue_pending"]
+          "enum": [
+            "running",
+            "stopped",
+            "paused",
+            "start_pending",
+            "stop_pending",
+            "pause_pending",
+            "continue_pending"
+          ]
         }
-      }
+      },
+      "identity_properties": [
+        "service_name",
+        "binary_path"
+      ]
     },
     {
       "category": "endpoint",
@@ -106,8 +253,16 @@
       "icon": "lock",
       "color": "#fbbf24",
       "properties": {
-        "name": { "type": "string", "description": "Mutex name.", "optional": false },
-        "created_by": { "type": "string", "description": "Process or sample that created the mutex.", "optional": true }
+        "name": {
+          "type": "string",
+          "description": "Mutex name.",
+          "optional": false
+        },
+        "created_by": {
+          "type": "string",
+          "description": "Process or sample that created the mutex.",
+          "optional": true
+        }
       }
     },
     {
@@ -119,16 +274,39 @@
       "icon": "calendar",
       "color": "#4ade80",
       "properties": {
-        "name": { "type": "string", "description": "Task / entry name.", "optional": false },
+        "name": {
+          "type": "string",
+          "description": "Task / entry name.",
+          "optional": false
+        },
         "mechanism": {
           "type": "enum",
           "description": "Persistence mechanism.",
           "optional": true,
-          "enum": ["scheduled_task", "run_key", "service", "startup_folder", "wmi", "other"]
+          "enum": [
+            "scheduled_task",
+            "run_key",
+            "service",
+            "startup_folder",
+            "wmi",
+            "other"
+          ]
         },
-        "trigger": { "type": "string", "description": "What triggers execution.", "optional": true },
-        "action": { "type": "text", "description": "Command or action executed.", "optional": true }
-      }
+        "trigger": {
+          "type": "string",
+          "description": "What triggers execution.",
+          "optional": true
+        },
+        "action": {
+          "type": "text",
+          "description": "Command or action executed.",
+          "optional": true
+        }
+      },
+      "identity_properties": [
+        "name",
+        "mechanism"
+      ]
     }
   ],
   "edge_types": [
@@ -138,8 +316,12 @@
       "label": "spawned",
       "display_name": "Spawned",
       "description": "A parent process spawned a child process.",
-      "from": ["endpoint.process"],
-      "to": ["endpoint.process"]
+      "from": [
+        "endpoint.process"
+      ],
+      "to": [
+        "endpoint.process"
+      ]
     },
     {
       "category": "endpoint",
@@ -147,8 +329,12 @@
       "label": "executed",
       "display_name": "Executed",
       "description": "A process executed from a file image.",
-      "from": ["endpoint.process"],
-      "to": ["endpoint.file"]
+      "from": [
+        "endpoint.process"
+      ],
+      "to": [
+        "endpoint.file"
+      ]
     },
     {
       "category": "endpoint",
@@ -156,8 +342,13 @@
       "label": "wrote",
       "display_name": "Wrote",
       "description": "A process wrote a file or registry key.",
-      "from": ["endpoint.process"],
-      "to": ["endpoint.file", "endpoint.registry_key"]
+      "from": [
+        "endpoint.process"
+      ],
+      "to": [
+        "endpoint.file",
+        "endpoint.registry_key"
+      ]
     },
     {
       "category": "endpoint",
@@ -165,8 +356,12 @@
       "label": "created mutex",
       "display_name": "Created Mutex",
       "description": "A process created a named mutex.",
-      "from": ["endpoint.process"],
-      "to": ["endpoint.mutex"]
+      "from": [
+        "endpoint.process"
+      ],
+      "to": [
+        "endpoint.mutex"
+      ]
     },
     {
       "category": "endpoint",
@@ -174,8 +369,14 @@
       "label": "installed",
       "display_name": "Installed",
       "description": "A process or file installed a service or persistence mechanism.",
-      "from": ["endpoint.process", "endpoint.file"],
-      "to": ["endpoint.service", "endpoint.persistence"]
+      "from": [
+        "endpoint.process",
+        "endpoint.file"
+      ],
+      "to": [
+        "endpoint.service",
+        "endpoint.persistence"
+      ]
     },
     {
       "category": "endpoint",
@@ -183,8 +384,12 @@
       "label": "dropped",
       "display_name": "Dropped",
       "description": "A file dropped another file to disk.",
-      "from": ["endpoint.file"],
-      "to": ["endpoint.file"]
+      "from": [
+        "endpoint.file"
+      ],
+      "to": [
+        "endpoint.file"
+      ]
     },
     {
       "category": "endpoint",
@@ -192,8 +397,17 @@
       "label": "observed on",
       "display_name": "Observed On",
       "description": "An endpoint artifact was observed on a host (e.g. an infrastructure.host).",
-      "from": ["endpoint.process", "endpoint.file", "endpoint.registry_key", "endpoint.service", "endpoint.mutex", "endpoint.persistence"],
-      "to": ["*"]
+      "from": [
+        "endpoint.process",
+        "endpoint.file",
+        "endpoint.registry_key",
+        "endpoint.service",
+        "endpoint.mutex",
+        "endpoint.persistence"
+      ],
+      "to": [
+        "*"
+      ]
     }
   ]
 }
