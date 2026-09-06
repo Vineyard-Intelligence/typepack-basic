@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.identity",
   "content_type": "vineyard:typepack",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "name": "Identity",
   "description": "People, organizations, and the online identities that connect them — personas, email addresses, phone numbers, and the accounts they hold on websites — for OSINT persona and attribution work.",
   "authors": [
@@ -35,8 +35,8 @@
           "optional": false
         },
         "aliases": {
-          "type": "text",
-          "description": "Other names, nicknames, or handles.",
+          "type": "array",
+          "description": "Other names, nicknames, or handles — one entry per name.",
           "optional": true
         },
         "date_of_birth": {

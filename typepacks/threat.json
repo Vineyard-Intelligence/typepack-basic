@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.threat",
   "content_type": "vineyard:typepack",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "name": "Threat",
   "description": "Threat-intelligence entities (malware, campaigns, operations, vulnerabilities, threat actors, indicators, attack patterns, tools, detection signatures) and their relationships, aligned with STIX 2.1 concepts.",
   "authors": [
@@ -99,8 +99,8 @@
           }
         },
         "aliases": {
-          "type": "text",
-          "description": "Other names the malware is tracked under.",
+          "type": "array",
+          "description": "Other names the malware is tracked under — one entry per name.",
           "optional": true
         },
         "first_seen": {
@@ -589,8 +589,8 @@
           ]
         },
         "aliases": {
-          "type": "text",
-          "description": "Other names for the tool.",
+          "type": "array",
+          "description": "Other names for the tool — one entry per name.",
           "optional": true
         },
         "description": {
