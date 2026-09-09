@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "name": "Infrastructure",
   "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
   "authors": [
@@ -272,6 +272,79 @@
           "type": "datetime",
           "description": "When the page was captured.",
           "optional": true
+        }
+      }
+    },
+    {
+      "category": "web",
+      "name": "tracking_id",
+      "display_name": "Tracking / Ad Account ID",
+      "description": "A third-party account identifier embedded in a page's markup — an ad-network publisher ID, an analytics property, a tag-manager container. It names WHO is paid for or measures the traffic, not what the page contains, so two sites carrying the same identifier are billed to or reported to one account. Operators rotate domains far more readily than they re-open a monetisation account, which is what makes this a durable same-operator link where infrastructure signals have gone cold.",
+      "label_property": "value",
+      "icon": "megaphone",
+      "color": "#fb923c",
+      "identity_properties": [
+        "value"
+      ],
+      "properties": {
+        "value": {
+          "type": "string",
+          "description": "The identifier exactly as it appears in the page, e.g. ca-pub-1234567890123456, G-AB12CD34EF, GTM-ABC1234, UA-12345678-1. Kept verbatim rather than normalised: the prefix is what distinguishes the provider, and two providers can otherwise issue the same digits.",
+          "optional": false,
+          "case_insensitive": true
+        },
+        "provider": {
+          "type": "enum",
+          "description": "Which service issued the identifier. 'other' is deliberate — the ad-tech long tail is where piracy monetisation actually lives, and an unrecognised network is still evidence.",
+          "optional": true,
+          "enum": [
+            "adsense",
+            "google_analytics",
+            "google_tag_manager",
+            "facebook_pixel",
+            "yandex_metrica",
+            "naver_analytics",
+            "exoclick",
+            "propellerads",
+            "adsterra",
+            "juicyads",
+            "other"
+          ]
+        },
+        "kind": {
+          "type": "enum",
+          "description": "What the identifier is FOR. An advertising account ties a site to money; an analytics property ties it only to whoever reads the dashboard. Both are same-operator evidence, and they are not equally strong.",
+          "optional": true,
+          "enum": [
+            "advertising",
+            "analytics",
+            "tag_manager",
+            "affiliate",
+            "other"
+          ]
+        },
+        "observed_on": {
+          "type": "url",
+          "description": "One page the identifier was read from. A single example for provenance, not the set — the full set is the edges into this node.",
+          "optional": true
+        },
+        "first_seen": {
+          "type": "datetime",
+          "description": "When a collector first observed this identifier.",
+          "optional": true
+        },
+        "source": {
+          "type": "enum",
+          "description": "Where in the page it was found. ads.txt is an authorisation file the domain owner publishes, so it is a stronger claim than an inline tag a third party could have injected.",
+          "optional": true,
+          "enum": [
+            "inline_script",
+            "script_src",
+            "ads_txt",
+            "sellers_json",
+            "meta_tag",
+            "other"
+          ]
         }
       }
     },
@@ -743,6 +816,20 @@
       ],
       "to": [
         "infrastructure.technologies"
+      ]
+    },
+    {
+      "category": "web",
+      "name": "carries_tracking_id",
+      "label": "carries tracking ID",
+      "display_name": "Carries Tracking ID",
+      "description": "The page or domain embeds this third-party account identifier.",
+      "from": [
+        "web.url",
+        "infrastructure.domain"
+      ],
+      "to": [
+        "web.tracking_id"
       ]
     }
   ]
