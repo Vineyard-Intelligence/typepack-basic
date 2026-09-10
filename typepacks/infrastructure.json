@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "2.3.0",
+  "version": "2.4.0",
   "name": "Infrastructure",
   "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
   "authors": [
@@ -14,7 +14,7 @@
   "distribution": {
     "kind": "git",
     "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
-    "ref": "v2.2.0",
+    "ref": "v2.4.0",
     "path": "typepacks/infrastructure.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/infrastructure",
@@ -289,37 +289,28 @@
       "properties": {
         "value": {
           "type": "string",
-          "description": "The identifier exactly as it appears in the page, e.g. ca-pub-1234567890123456, G-AB12CD34EF, GTM-ABC1234, UA-12345678-1. Kept verbatim rather than normalised: the prefix is what distinguishes the provider, and two providers can otherwise issue the same digits.",
+          "description": "The identifier, NAMESPACED as `<provider>:<raw value>` — `exoclick:4823917`, `adsense:ca-pub-6071864913982699`, `google.com:pub-6071864913982699` (ads.txt, where the namespace is the ad-system domain from field 1). The raw part is kept verbatim; nothing is normalised beyond case-folding. The namespace is not decoration: half these networks issue a bare 5-9 digit integer, so identity on the raw value alone would merge one operator's ExoClick zone with an unrelated operator's Monetag zone and assert a link that does not exist. A collector that cannot name its provider must not emit the node.",
           "optional": false,
           "case_insensitive": true
         },
         "provider": {
-          "type": "enum",
-          "description": "Which service issued the identifier. 'other' is deliberate — the ad-tech long tail is where piracy monetisation actually lives, and an unrecognised network is still evidence.",
+          "type": "string",
+          "description": "Lower-case slug of the service that issued the identifier — `exoclick`, `juicyads`, `propellerads`, `adsense`, `google_analytics`, `coupang_partners`, `kakao_adfit`. Free text on purpose: this was a closed 11-value enum in 2.3.0 and the first catalogue of real ad-tech turned up more than 40 providers, so `other` would have swallowed the network name with no way to get it back — for a bare-integer value the provider is the ONLY field that says which network it belongs to. Widening cannot split or merge nodes: identity is `value` alone, and the provider is already inside it as the namespace.",
           "optional": true,
-          "enum": [
-            "adsense",
-            "google_analytics",
-            "google_tag_manager",
-            "facebook_pixel",
-            "yandex_metrica",
-            "naver_analytics",
-            "exoclick",
-            "propellerads",
-            "adsterra",
-            "juicyads",
-            "other"
-          ]
+          "case_insensitive": true
         },
         "kind": {
           "type": "enum",
-          "description": "What the identifier is FOR. An advertising account ties a site to money; an analytics property ties it only to whoever reads the dashboard. Both are same-operator evidence, and they are not equally strong.",
+          "description": "What the identifier is FOR. An advertising or payment account ties a site to money; an analytics property ties it only to whoever reads the dashboard. `site_verification` is stronger than either: the value is a token the provider issued to one account and the operator published it to prove the host is theirs, so it is an ownership claim rather than an embedded tag a third party could have injected. All are same-operator evidence, and they are not equally strong.",
           "optional": true,
           "enum": [
             "advertising",
             "analytics",
             "tag_manager",
             "affiliate",
+            "payment",
+            "identity",
+            "site_verification",
             "other"
           ]
         },
@@ -335,14 +326,18 @@
         },
         "source": {
           "type": "enum",
-          "description": "Where in the page it was found. ads.txt is an authorisation file the domain owner publishes, so it is a stronger claim than an inline tag a third party could have injected.",
+          "description": "Where it was found. Ranked by how hard it is to plant: `well_known` and `ads_txt` are files the domain owner must publish at a fixed path, so they are the owner's own claim; a `meta_tag` verification token is nearly as strong; `inline_script` is the weakest because any injected third-party tag lands there too. `tag_manager_container` means the value was not in the page at all — it was recovered by fetching the tag-manager container as static text, so the page's own markup is not evidence of it.",
           "optional": true,
           "enum": [
             "inline_script",
             "script_src",
-            "ads_txt",
-            "sellers_json",
             "meta_tag",
+            "html_link",
+            "ads_txt",
+            "app_ads_txt",
+            "sellers_json",
+            "well_known",
+            "tag_manager_container",
             "other"
           ]
         }
@@ -823,13 +818,28 @@
       "name": "carries_tracking_id",
       "label": "carries tracking ID",
       "display_name": "Carries Tracking ID",
-      "description": "The page or domain embeds this third-party account identifier.",
+      "description": "The page, domain or host embeds this third-party account identifier. A bare IP is a valid source: a probe against an address with no name still returns the default vhost's markup, and the tags in it belong to whoever runs that server.",
+      "from": [
+        "web.url",
+        "infrastructure.domain",
+        "infrastructure.ip_address"
+      ],
+      "to": [
+        "web.tracking_id"
+      ]
+    },
+    {
+      "category": "web",
+      "name": "payment_recipient",
+      "label": "pays",
+      "display_name": "Payment Recipient",
+      "description": "The page's payment form is addressed to this account. Distinct from `carries_tracking_id` because the value is not an opaque account number — it is an address that other collectors (WHOIS contacts, breach data, PGP keys) also produce, so it belongs in `identity.email_address` where it converges with them rather than in a tracking-ID silo where it never would.",
       "from": [
         "web.url",
         "infrastructure.domain"
       ],
       "to": [
-        "web.tracking_id"
+        "identity.email_address"
       ]
     }
   ]
