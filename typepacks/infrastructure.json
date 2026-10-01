@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "name": "Infrastructure",
   "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, SSH host keys, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
   "authors": [
@@ -14,7 +14,7 @@
   "distribution": {
     "kind": "git",
     "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
-    "ref": "v2.5.0",
+    "ref": "v2.6.0",
     "path": "typepacks/infrastructure.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/infrastructure",
@@ -171,18 +171,19 @@
       "category": "web",
       "name": "hhhash",
       "display_name": "HTTP Header Hash (HHHash)",
-      "description": "A hash of the normalized HTTP/1 response header structure (which headers, in which order) — a stable fingerprint of the server stack behind a host, used to cluster infrastructure deployed from the same template.",
+      "description": "HHHash: a fingerprint of the server stack behind a host, from the names of its HTTP/1.1 response headers in the order sent.",
       "label_property": "hash_value",
       "icon": "file-code",
       "color": "#f0abfc",
       "properties": {
         "hash_value": {
           "type": "hash",
-          "description": "The HHHash value (SHA-256 of the normalized header set).",
+          "description": "The HHHash: hhh:1: followed by the SHA-256 of the response header names in order, joined with ':' (https://github.com/adulau/HHHash).",
           "optional": false,
           "validator": {
-            "regex": "^[a-fA-F0-9]{64}$"
-          }
+            "regex": "^hhh:1:[a-fA-F0-9]{64}$"
+          },
+          "case_insensitive": true
         },
         "header_count": {
           "type": "integer",
@@ -208,14 +209,14 @@
       "category": "web",
       "name": "favicon_hash",
       "display_name": "Favicon Hash",
-      "description": "A MurmurHash3 (MMH3) hash of a site's favicon binary — a low-entropy fingerprint often reused verbatim across phishing kits, scam portals and darknet storefronts, making it a durable pivot between otherwise unrelated hosts.",
+      "description": "A MurmurHash3 (MMH3) hash of a site's favicon — the value Shodan (http.favicon.hash), Censys and Criminal IP search by.",
       "label_property": "hash_value",
       "icon": "image",
       "color": "#fda4af",
       "properties": {
         "hash_value": {
           "type": "hash",
-          "description": "The MMH3 hash of the favicon (decimal or hex form as observed).",
+          "description": "The MMH3 hash of the favicon, Shodan-style (computed over the base64-encoded file) as a signed decimal, or a hex form as observed.",
           "optional": false,
           "validator": {
             "regex": "^-?\\d{1,12}$|^[a-fA-F0-9]{1,16}$"
