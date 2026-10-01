@@ -1,9 +1,9 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "name": "Infrastructure",
-  "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
+  "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, SSH host keys, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
   "authors": [
     {
       "name": "VINEYARD",
@@ -14,7 +14,7 @@
   "distribution": {
     "kind": "git",
     "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
-    "ref": "v2.4.0",
+    "ref": "v2.5.0",
     "path": "typepacks/infrastructure.json"
   },
   "marketing_url": "https://vineyard.run/typepacks/infrastructure",
@@ -608,6 +608,32 @@
     },
     {
       "category": "infrastructure",
+      "name": "ssh_host_key",
+      "display_name": "SSH Host Key",
+      "description": "An SSH server's public host key. A host key is normally generated per server, so the same key on two IPs usually means the same machine; device default keys shared by many hosts are the exception.",
+      "label_property": "fingerprint_sha256",
+      "icon": "fingerprint",
+      "color": "#2dd4bf",
+      "properties": {
+        "fingerprint_sha256": {
+          "type": "hash",
+          "description": "SHA-256 of the public key blob, as lowercase hex — the bytes OpenSSH's SHA256: fingerprint hashes, written in hex instead of base64.",
+          "optional": false,
+          "case_insensitive": true,
+          "validator": {
+            "format": "sha256",
+            "regex": "^[a-fA-F0-9]{64}$"
+          }
+        },
+        "key_type": {
+          "type": "string",
+          "description": "Key algorithm as the server announces it, e.g. ssh-ed25519, ssh-rsa, ecdsa-sha2-nistp256.",
+          "optional": true
+        }
+      }
+    },
+    {
+      "category": "infrastructure",
       "name": "technologies",
       "display_name": "Technologies",
       "description": "A technology observed on or behind a host: software (web server, CMS, framework), hardware (appliance, device), or a third-party service (Cloudflare, AWS, Google Analytics). One type covers all three so a fingerprinting result is a single node kind.",
@@ -795,6 +821,20 @@
       ],
       "to": [
         "infrastructure.certificate"
+      ]
+    },
+    {
+      "category": "infrastructure",
+      "name": "presents_host_key",
+      "label": "presents host key",
+      "display_name": "Presents Host Key",
+      "description": "An IP or host serves this SSH host key.",
+      "from": [
+        "infrastructure.ip_address",
+        "infrastructure.host"
+      ],
+      "to": [
+        "infrastructure.ssh_host_key"
       ]
     },
     {
