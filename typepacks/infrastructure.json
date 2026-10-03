@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "2.6.0",
+  "version": "2.7.0",
   "name": "Infrastructure",
   "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, SSH host keys, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
   "authors": [
@@ -285,19 +285,20 @@
       "icon": "megaphone",
       "color": "#fb923c",
       "identity_properties": [
+        "provider",
         "value"
       ],
       "properties": {
         "value": {
           "type": "string",
-          "description": "The identifier, NAMESPACED as `<provider>:<raw value>` — `exoclick:4823917`, `adsense:ca-pub-6071864913982699`, `google.com:pub-6071864913982699` (ads.txt, where the namespace is the ad-system domain from field 1). The raw part is kept verbatim; nothing is normalised beyond case-folding. The namespace is not decoration: half these networks issue a bare 5-9 digit integer, so identity on the raw value alone would merge one operator's ExoClick zone with an unrelated operator's Monetag zone and assert a link that does not exist. A collector that cannot name its provider must not emit the node.",
+          "description": "The identifier exactly as the page carries it — `G-SXM8TFRYSW`, `ca-pub-6071864913982699`, `4823917`, `pub-6071864913982699` (ads.txt). Kept verbatim, no `provider:` prefix; nothing is normalised beyond case-folding. Identity is (provider, value), not the value alone: half these networks issue a bare 5-9 digit integer, and one operator's ExoClick zone 4823917 must not merge with an unrelated operator's Monetag zone 4823917.",
           "optional": false,
           "case_insensitive": true
         },
         "provider": {
           "type": "string",
-          "description": "Lower-case slug of the service that issued the identifier — `exoclick`, `juicyads`, `propellerads`, `adsense`, `google_analytics`, `coupang_partners`, `kakao_adfit`. Free text on purpose: this was a closed 11-value enum in 2.3.0 and the first catalogue of real ad-tech turned up more than 40 providers, so `other` would have swallowed the network name with no way to get it back — for a bare-integer value the provider is the ONLY field that says which network it belongs to. Widening cannot split or merge nodes: identity is `value` alone, and the provider is already inside it as the namespace.",
-          "optional": true,
+          "description": "Lower-case slug of the service that issued the identifier — `exoclick`, `juicyads`, `propellerads`, `adsense`, `google_analytics`, `google_tag_manager`, `coupang_partners`, `kakao_adfit`; for an ads.txt row, the ad-system domain from field 1 (`google.com`). Part of the identity, so one issuer must always get one spelling: two slugs for the same account split it into two nodes. Free text on purpose: the first catalogue of real ad-tech turned up more than 40 providers, and for a bare-integer value the provider is the only field that says which network it belongs to. A collector that cannot name the provider must not emit the node.",
+          "optional": false,
           "case_insensitive": true
         },
         "kind": {
