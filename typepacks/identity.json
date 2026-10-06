@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.identity",
   "content_type": "vineyard:typepack",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "name": "Identity",
   "description": "People, organizations, and the online identities that connect them — personas, email addresses, phone numbers, and the accounts they hold on websites — for OSINT persona and attribution work.",
   "authors": [
@@ -310,7 +310,7 @@
         },
         "key_id": {
           "type": "string",
-          "description": "Long key ID (v4: last 16 hex of the fingerprint; v6: last 32 hex).",
+          "description": "Long key ID: 16 hex. v4: the last 16 hex of the fingerprint; v6: the first 16 (RFC 9580). Older nodes may hold 32 hex.",
           "optional": true,
           "validator": {
             "regex": "^(?:[a-fA-F0-9]{16}|[a-fA-F0-9]{32})$"
