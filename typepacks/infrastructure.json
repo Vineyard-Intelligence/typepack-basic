@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "2.7.0",
+  "version": "3.0.0",
   "name": "Infrastructure",
   "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, SSH host keys, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
   "authors": [
@@ -55,9 +55,13 @@
           }
         },
         "asn": {
-          "type": "string",
-          "description": "Autonomous System Number that announces this address (e.g. AS13335).",
-          "optional": true
+          "type": "integer",
+          "description": "Autonomous System Number that announces this address, as a bare integer (e.g. 13335).",
+          "optional": true,
+          "validator": {
+            "min": 1,
+            "max": 4294967295
+          }
         },
         "organization": {
           "type": "string",
@@ -445,9 +449,13 @@
           "optional": true
         },
         "asn": {
-          "type": "string",
-          "description": "Announcing ASN.",
-          "optional": true
+          "type": "integer",
+          "description": "Announcing Autonomous System Number, as a bare integer (e.g. 13335).",
+          "optional": true,
+          "validator": {
+            "min": 1,
+            "max": 4294967295
+          }
         },
         "country_code": {
           "type": "string",
