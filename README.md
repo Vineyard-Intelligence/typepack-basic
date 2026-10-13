@@ -1,16 +1,16 @@
 # typepack-basic
 
-The **basic Type Pack collection** for Vineyard — schema-only definitions of entity types, their
-properties, and the edge types that connect them. No code runs; a Type Pack is data.
+The **basic Type Pack collection** for Vineyard — schema-only definitions of entity types and
+their properties. No code runs; a Type Pack is data.
 
-| Type Pack | Identifier | Types · edges |
+| Type Pack | Identifier | Types |
 | --- | --- | --- |
-| Infrastructure | `run.vineyard.typepacks.infrastructure` | 15 · 14 |
-| Threat | `run.vineyard.typepacks.threat` | 10 · 10 |
-| Identity | `run.vineyard.typepacks.identity` | 7 · 7 |
-| Financial | `run.vineyard.typepacks.financial` | 4 · 5 |
-| Endpoint | `run.vineyard.typepacks.endpoint` | 6 · 7 |
-| Geospatial | `run.vineyard.typepacks.geo` | 3 · 3 |
+| Infrastructure | `run.vineyard.typepacks.infrastructure` | 15 |
+| Threat | `run.vineyard.typepacks.threat` | 10 |
+| Identity | `run.vineyard.typepacks.identity` | 7 |
+| Financial | `run.vineyard.typepacks.financial` | 4 |
+| Endpoint | `run.vineyard.typepacks.endpoint` | 6 |
+| Geospatial | `run.vineyard.typepacks.geo` | 3 |
 
 Each pack lives at `typepacks/<name>.json`. Clients fetch a pack from this repo at the commit
 the registry pins, e.g.

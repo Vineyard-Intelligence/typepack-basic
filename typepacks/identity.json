@@ -11,12 +11,6 @@
     }
   ],
   "license": "Apache-2.0",
-  "distribution": {
-    "kind": "git",
-    "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
-    "ref": "v2.1.0",
-    "path": "typepacks/identity.json"
-  },
   "marketing_url": "https://vineyard.run/typepacks/identity",
   "thumbnail_url": "https://vineyard.run/typepacks/identity/icon.png",
   "types": [
@@ -310,10 +304,10 @@
         },
         "key_id": {
           "type": "string",
-          "description": "Long key ID: 16 hex. v4: the last 16 hex of the fingerprint; v6: the first 16 (RFC 9580). Older nodes may hold 32 hex.",
+          "description": "Long key ID: 16 hex. v4: the last 16 hex of the fingerprint; v6: the first 16 (RFC 9580).",
           "optional": true,
           "validator": {
-            "regex": "^(?:[a-fA-F0-9]{16}|[a-fA-F0-9]{32})$"
+            "regex": "^[a-fA-F0-9]{16}$"
           },
           "case_insensitive": true
         },
@@ -358,112 +352,6 @@
           "optional": true
         }
       }
-    }
-  ],
-  "edge_types": [
-    {
-      "category": "identity",
-      "name": "owns",
-      "label": "owns",
-      "display_name": "Owns",
-      "description": "A person, organization, or unattributed handle owns an account, email, or phone number.",
-      "from": [
-        "identity.person",
-        "identity.organization",
-        "identity.handle"
-      ],
-      "to": [
-        "identity.account",
-        "identity.email_address",
-        "identity.phone_number"
-      ]
-    },
-    {
-      "category": "identity",
-      "name": "member_of",
-      "label": "member of",
-      "display_name": "Member Of",
-      "description": "A person is a member of an organization.",
-      "from": [
-        "identity.person"
-      ],
-      "to": [
-        "identity.organization"
-      ]
-    },
-    {
-      "category": "identity",
-      "name": "affiliated_with",
-      "label": "affiliated with",
-      "display_name": "Affiliated With",
-      "description": "An organization is affiliated with another organization.",
-      "from": [
-        "identity.organization"
-      ],
-      "to": [
-        "identity.organization"
-      ]
-    },
-    {
-      "category": "identity",
-      "name": "same_as",
-      "label": "same as",
-      "display_name": "Same As",
-      "description": "Two personas or accounts are assessed to be the same identity.",
-      "directed": false,
-      "from": [
-        "identity.person",
-        "identity.account",
-        "identity.handle"
-      ],
-      "to": [
-        "identity.person",
-        "identity.account",
-        "identity.handle"
-      ]
-    },
-    {
-      "category": "identity",
-      "name": "controls",
-      "label": "controls",
-      "display_name": "Controls",
-      "description": "A person or organization controls another entity or asset.",
-      "from": [
-        "identity.person",
-        "identity.organization",
-        "identity.handle"
-      ],
-      "to": [
-        "*"
-      ]
-    },
-    {
-      "category": "identity",
-      "name": "key_bound_to",
-      "label": "key bound to",
-      "display_name": "Key Bound To",
-      "description": "A PGP public key certifies (is bound to) an email address in one of its User IDs.",
-      "from": [
-        "identity.pgp_key"
-      ],
-      "to": [
-        "identity.email_address"
-      ]
-    },
-    {
-      "category": "identity",
-      "name": "resolves_to",
-      "label": "resolves to",
-      "display_name": "Resolves To",
-      "description": "An unattributed handle has been identified as this person, organization, or account. Kept separate from `same_as` so the moment of attribution stays visible in the graph rather than being flattened into an equivalence.",
-      "from": [
-        "identity.handle"
-      ],
-      "to": [
-        "identity.person",
-        "identity.organization",
-        "identity.account"
-      ]
     }
   ]
 }
