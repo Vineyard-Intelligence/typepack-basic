@@ -11,12 +11,6 @@
     }
   ],
   "license": "Apache-2.0",
-  "distribution": {
-    "kind": "git",
-    "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
-    "ref": "v1.0.0",
-    "path": "typepacks/endpoint.json"
-  },
   "marketing_url": "https://vineyard.run/typepacks/endpoint",
   "thumbnail_url": "https://vineyard.run/typepacks/endpoint/icon.png",
   "types": [
@@ -306,107 +300,6 @@
       "identity_properties": [
         "name",
         "mechanism"
-      ]
-    }
-  ],
-  "edge_types": [
-    {
-      "category": "endpoint",
-      "name": "spawned",
-      "label": "spawned",
-      "display_name": "Spawned",
-      "description": "A parent process spawned a child process.",
-      "from": [
-        "endpoint.process"
-      ],
-      "to": [
-        "endpoint.process"
-      ]
-    },
-    {
-      "category": "endpoint",
-      "name": "executed",
-      "label": "executed",
-      "display_name": "Executed",
-      "description": "A process executed from a file image.",
-      "from": [
-        "endpoint.process"
-      ],
-      "to": [
-        "endpoint.file"
-      ]
-    },
-    {
-      "category": "endpoint",
-      "name": "wrote",
-      "label": "wrote",
-      "display_name": "Wrote",
-      "description": "A process wrote a file or registry key.",
-      "from": [
-        "endpoint.process"
-      ],
-      "to": [
-        "endpoint.file",
-        "endpoint.registry_key"
-      ]
-    },
-    {
-      "category": "endpoint",
-      "name": "created_mutex",
-      "label": "created mutex",
-      "display_name": "Created Mutex",
-      "description": "A process created a named mutex.",
-      "from": [
-        "endpoint.process"
-      ],
-      "to": [
-        "endpoint.mutex"
-      ]
-    },
-    {
-      "category": "endpoint",
-      "name": "installed",
-      "label": "installed",
-      "display_name": "Installed",
-      "description": "A process or file installed a service or persistence mechanism.",
-      "from": [
-        "endpoint.process",
-        "endpoint.file"
-      ],
-      "to": [
-        "endpoint.service",
-        "endpoint.persistence"
-      ]
-    },
-    {
-      "category": "endpoint",
-      "name": "dropped",
-      "label": "dropped",
-      "display_name": "Dropped",
-      "description": "A file dropped another file to disk.",
-      "from": [
-        "endpoint.file"
-      ],
-      "to": [
-        "endpoint.file"
-      ]
-    },
-    {
-      "category": "endpoint",
-      "name": "observed_on",
-      "label": "observed on",
-      "display_name": "Observed On",
-      "description": "An endpoint artifact was observed on a host (e.g. an infrastructure.host).",
-      "from": [
-        "endpoint.process",
-        "endpoint.file",
-        "endpoint.registry_key",
-        "endpoint.service",
-        "endpoint.mutex",
-        "endpoint.persistence"
-      ],
-      "to": [
-        "*"
       ]
     }
   ]

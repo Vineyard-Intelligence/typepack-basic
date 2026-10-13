@@ -6,12 +6,6 @@
   "description": "Places and physical context — locations with coordinates, postal addresses, and facilities — to anchor the 'where' of an investigation.",
   "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
   "license": "Apache-2.0",
-  "distribution": {
-    "kind": "git",
-    "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
-    "ref": "v1.0.0",
-    "path": "typepacks/geo.json"
-  },
   "marketing_url": "https://vineyard.run/typepacks/geo",
   "thumbnail_url": "https://vineyard.run/typepacks/geo/icon.png",
   "types": [
@@ -66,36 +60,6 @@
         },
         "operator": { "type": "string", "description": "Operating organization.", "optional": true }
       }
-    }
-  ],
-  "edge_types": [
-    {
-      "category": "geo",
-      "name": "located_at",
-      "label": "located at",
-      "display_name": "Located At",
-      "description": "Any entity is located at a place, address, or facility.",
-      "from": ["*"],
-      "to": ["geo.location", "geo.address", "geo.facility"]
-    },
-    {
-      "category": "geo",
-      "name": "located_in",
-      "label": "located in",
-      "display_name": "Located In",
-      "description": "An address or facility is located within a broader location.",
-      "from": ["geo.address", "geo.facility"],
-      "to": ["geo.location"]
-    },
-    {
-      "category": "geo",
-      "name": "near",
-      "label": "near",
-      "display_name": "Near",
-      "description": "Two locations are geographically near each other.",
-      "directed": false,
-      "from": ["geo.location"],
-      "to": ["geo.location"]
     }
   ]
 }

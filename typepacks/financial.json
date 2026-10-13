@@ -6,12 +6,6 @@
   "description": "Money-trail entities for following the funds — cryptocurrency addresses and transactions, exchanges, and bank accounts. Public identifiers only; no keys, PANs, or credentials.",
   "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
   "license": "Apache-2.0",
-  "distribution": {
-    "kind": "git",
-    "repository": "https://github.com/Vineyard-Intelligence/typepack-basic",
-    "ref": "v1.0.0",
-    "path": "typepacks/financial.json"
-  },
   "marketing_url": "https://vineyard.run/typepacks/financial",
   "thumbnail_url": "https://vineyard.run/typepacks/financial/icon.png",
   "types": [
@@ -92,53 +86,6 @@
         "country": { "type": "string", "description": "Country of the account.", "optional": true },
         "currency": { "type": "string", "description": "Account currency (ISO 4217).", "optional": true }
       }
-    }
-  ],
-  "edge_types": [
-    {
-      "category": "financial",
-      "name": "transfers_to",
-      "label": "transfers to",
-      "display_name": "Transfers To",
-      "description": "Funds move from one account/address to another.",
-      "from": ["financial.crypto_address", "financial.bank_account"],
-      "to": ["financial.crypto_address", "financial.bank_account"]
-    },
-    {
-      "category": "financial",
-      "name": "input_to",
-      "label": "input to",
-      "display_name": "Input To",
-      "description": "An address is an input to a transaction.",
-      "from": ["financial.crypto_address"],
-      "to": ["financial.crypto_transaction"]
-    },
-    {
-      "category": "financial",
-      "name": "output_to",
-      "label": "output to",
-      "display_name": "Output To",
-      "description": "A transaction sends an output to an address.",
-      "from": ["financial.crypto_transaction"],
-      "to": ["financial.crypto_address"]
-    },
-    {
-      "category": "financial",
-      "name": "hosted_at",
-      "label": "hosted at",
-      "display_name": "Hosted At",
-      "description": "An address or account is custodied at an exchange.",
-      "from": ["financial.crypto_address", "financial.bank_account"],
-      "to": ["financial.exchange"]
-    },
-    {
-      "category": "financial",
-      "name": "controlled_by",
-      "label": "controlled by",
-      "display_name": "Controlled By",
-      "description": "An address, account, or exchange is controlled by an external entity.",
-      "from": ["financial.crypto_address", "financial.bank_account", "financial.exchange"],
-      "to": ["*"]
     }
   ]
 }
