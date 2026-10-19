@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "name": "Infrastructure",
   "description": "Network-infrastructure OSINT entities (IP addresses, domains, hosts, autonomous systems, netblocks, DNS records, WHOIS records, certificates, SSH host keys, technologies) in the `infrastructure` category, plus the web-resource entity (URL) in the `web` category, and the relationships between them.",
   "authors": [
@@ -207,28 +207,73 @@
       "category": "web",
       "name": "favicon_hash",
       "display_name": "Favicon Hash",
-      "description": "A MurmurHash3 (MMH3) hash of a site's favicon — the value Shodan (http.favicon.hash), Censys and Criminal IP search by.",
+      "description": "A site's favicon, identified by the hashes search services index it under. Sites built from one kit or template often serve the identical icon file. A widely used default icon is shared by unrelated sites. Services hash the same file in different forms: hash_value for Shodan, FOFA, Censys and ZoomEye; mmh3_hex for Criminal IP; md5 for Censys, ZoomEye, 360 Quake, Hunter.how, ONYPHE and VirusTotal; sha256 for Censys, Netlas and urlscan.io. phash and dhash are perceptual hashes of the decoded image, compared by how many of their 64 bits differ. Each property's description gives its search syntax. Censys keeps the same fields under web.endpoints.http.favicons for web properties.",
       "label_property": "hash_value",
       "icon": "image",
       "color": "#fda4af",
       "properties": {
         "hash_value": {
           "type": "hash",
-          "description": "The MMH3 hash of the favicon, Shodan-style (computed over the base64-encoded file) as a signed decimal, or a hex form as observed.",
+          "description": "Shodan-style MurmurHash3 (x86 32-bit, seed 0) of the favicon encoded as base64 with a newline every 76 characters and at the end, as a signed decimal. Searched as Shodan http.favicon.hash:<value>, FOFA icon_hash=\"<value>\", Censys host.services.endpoints.http.favicons.hash_shodan=\"<value>\" and ZoomEye iconhash=\"<value>\".",
           "optional": false,
           "validator": {
-            "regex": "^-?\\d{1,12}$|^[a-fA-F0-9]{1,16}$"
+            "regex": "^-?\\d{1,10}$"
           }
         },
         "hash_algorithm": {
           "type": "enum",
-          "description": "Hashing algorithm used.",
+          "description": "Form of hash_value: the Shodan-style MurmurHash3.",
           "optional": true,
           "enum": [
-            "mmh3",
-            "sha256",
-            "other"
+            "mmh3"
           ]
+        },
+        "mmh3_hex": {
+          "type": "hash",
+          "description": "hash_value in hexadecimal with its sign kept, for example -30149ea for -50416106. Criminal IP searches it as favicon: <value>.",
+          "optional": true,
+          "case_insensitive": true,
+          "validator": {
+            "regex": "^-?[a-fA-F0-9]{1,8}$"
+          }
+        },
+        "md5": {
+          "type": "hash",
+          "description": "MD5 of the favicon file's bytes, lowercase hex. Searched as Censys host.services.endpoints.http.favicons.hash_md5=\"<md5>\", ZoomEye iconhash=\"<md5>\", 360 Quake favicon:\"<md5>\", Hunter.how favicon_hash==\"<md5>\", ONYPHE app.favicon.imagemd5:\"<md5>\" and VirusTotal entity:url main_icon_md5:<md5>.",
+          "optional": true,
+          "case_insensitive": true,
+          "validator": {
+            "format": "md5",
+            "regex": "^[a-fA-F0-9]{32}$"
+          }
+        },
+        "sha256": {
+          "type": "hash",
+          "description": "SHA-256 of the favicon file's bytes, lowercase hex. Searched as Censys host.services.endpoints.http.favicons.hash_sha256=\"<sha256>\", Netlas http.favicon.hash_sha256:<sha256> and urlscan.io hash:<sha256>.",
+          "optional": true,
+          "case_insensitive": true,
+          "validator": {
+            "format": "sha256",
+            "regex": "^[a-fA-F0-9]{64}$"
+          }
+        },
+        "phash": {
+          "type": "hash",
+          "description": "pHash of the favicon image as the Python ImageHash library computes it on Pillow's decoding: grayscale, Lanczos to 32x32, a DCT, and the top-left 8x8 coefficients against their median, as 16 hex digits. Censys indexes a 64-bit perceptual hash as host.services.endpoints.http.favicons.hash_phash=\"<phash>\" and does not document its algorithm.",
+          "optional": true,
+          "case_insensitive": true,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{16}$"
+          }
+        },
+        "dhash": {
+          "type": "hash",
+          "description": "Difference hash of the favicon image as 16 hex digits: grayscale, Lanczos to 9x8, and one bit per pair of horizontally adjacent pixels, set when the left one is brighter and packed lowest bit first in each byte. VirusTotal searches it by similarity as entity:url main_icon_dhash:<dhash>.",
+          "optional": true,
+          "case_insensitive": true,
+          "validator": {
+            "regex": "^[a-fA-F0-9]{16}$"
+          }
         },
         "favicon_url": {
           "type": "url",
