@@ -1,9 +1,10 @@
 {
   "identifier": "run.vineyard.typepacks.geo",
   "content_type": "vineyard:typepack",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "name": "Geospatial",
-  "description": "Places and physical context — locations with coordinates, postal addresses, and facilities — to anchor the 'where' of an investigation.",
+  "summary": "Places and physical context — locations with coordinates, postal addresses, and facilities — to anchor the 'where' of an investigation.",
+  "description": "Node types for the physical side of an investigation: a named place with optional coordinates, a postal address, and a physical site such as an office, a datacenter or a residence.\n\nThe pack is data only: it defines three node types in the `geo` category and runs no code. It declares no edge types; tying a person, an organisation or a server to a place is recorded as an edge in the project.\n\n## Types\n\n| Type | Label | What it represents |\n| --- | --- | --- |\n| `geo.location` | `name` | A named geographic location with optional coordinates |\n| `geo.address` | `formatted_address` | A postal or street address |\n| `geo.facility` | `name` | A physical site such as an office, datacenter or residence |\n\nEach type is identified by its label field alone, so two locations recorded under the same `name`, or two facilities with the same `name`, are one node.\n\n## Notable properties\n\n- **Location.** `latitude` (-90 to 90) and `longitude` (-180 to 180) in decimal degrees, with `city`, `region` (state or region) and `country`.\n- **Address.** The full `formatted_address`, with `street`, `city`, `postal_code` and `country` as separate fields.\n- **Facility.** `facility_type`, one of `office`, `datacenter`, `residence`, `warehouse`, `government`, `military`, `other`, and `operator`, the operating organisation.\n\n`country` is free text in all three types; the pack does not prescribe a code list.\n\n## Source\n\nhttps://github.com/Vineyard-Intelligence/typepack-basic (file `typepacks/geo.json`). Licence: Apache-2.0.",
   "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
   "license": "Apache-2.0",
   "marketing_url": "https://vineyard.run/typepacks/geo",
