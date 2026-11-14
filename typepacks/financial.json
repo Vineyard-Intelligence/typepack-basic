@@ -1,10 +1,10 @@
 {
   "identifier": "run.vineyard.typepacks.financial",
   "content_type": "vineyard:typepack",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "name": "Financial",
-  "summary": "Follow-the-money entities: exchanges and other virtual-asset service providers, bank accounts, and the legacy cryptocurrency address and transaction types. Public identifiers only — no keys, PANs, or credentials.",
-  "description": "Reach for it to trace funds through exchanges and other virtual-asset service providers, and to bank accounts. Cryptocurrency addresses and transactions are the Cryptocurrency pack's: it identifies them by network as well as by value, so the same string on two chains stays two nodes. This pack's `crypto_address` and `crypto_transaction` remain for nodes made before it and are not used for new ones.\n\n- **Public identifiers only.** Every type holds an identifier that is already public: a wallet address, a transaction hash, an IBAN or account number. There is no property for a private key, a card number (PAN) or a credential.\n- **Exchanges.** `exchange` is any service that holds customers' funds: an exchange, an OTC desk, a custodial wallet, a payment processor. The Cryptocurrency pack's `crypto_service` is for the ones that do not.\n- **Identity.** Each type is identified by its label alone (address, transaction hash, exchange name, account identifier), compared exactly as written, letter case included. An address's `currency` is not part of its identity.\n- **Units.** `balance`, `amount` and `fee` are in the asset's native unit; a bank account's `currency` is an ISO 4217 code.\n\n**Source:** https://github.com/Vineyard-Intelligence/typepack-basic (`typepacks/financial.json`). Licence: Apache-2.0.",
+  "summary": "Follow-the-money entities: bank accounts with their fraud-report status, exchanges and other virtual-asset service providers, and the legacy cryptocurrency address and transaction types. Public identifiers only — no keys, PANs, or credentials.",
+  "description": "Reach for it to trace funds through bank accounts, such as the mule accounts a fraud case pays into, and through exchanges and other virtual-asset service providers. Cryptocurrency addresses and transactions belong to the Cryptocurrency pack, which tells networks apart; this pack's `crypto_address` and `crypto_transaction` remain only for nodes made before it.\n\n- **Public identifiers only.** No property holds a private key, a card number (PAN) or a credential.\n- **Exchanges.** `exchange` is any service that holds customers' funds: an exchange, an OTC desk, a custodial wallet, a payment processor. The Cryptocurrency pack's `crypto_service` is for the ones that do not.\n- **Bank accounts.** One is identified by bank code and account number together: the same number at two banks is two accounts. Write both without spaces or hyphens, and the bank as its code, not its name; an IBAN takes no bank code. One recorded before 2.0.0 has no bank code and does not merge with new writes of it. Fraud registration and payment suspension hold as of `status_checked_at`, and a registration can be released later. The holder of record is often not whoever used the account.\n- **Other types** are identified by their label alone, as written, case included.\n- **Units.** `balance`, `amount` and `fee` are in the asset's native unit; a bank account's `currency` is an ISO 4217 code.\n\n**Source:** https://github.com/Vineyard-Intelligence/typepack-basic (`typepacks/financial.json`). Licence: Apache-2.0.",
   "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
   "license": "Apache-2.0",
   "marketing_url": "https://vineyard.run/typepacks/financial",
@@ -76,16 +76,51 @@
       "category": "financial",
       "name": "bank_account",
       "display_name": "Bank Account",
-      "description": "A traditional bank account identified by its public account identifier (IBAN / account number).",
+      "description": "A bank account. Identified by (bank_code, account_identifier), because an account number is unique only within its bank. A mule account in a fraud case is this type, with its report status alongside; whoever operated it is an identity.person linked by an edge.",
       "label_property": "account_identifier",
+      "identity_properties": ["bank_code", "account_identifier"],
+      "label_template": "{account_identifier} · {bank_name}",
       "icon": "banknote",
       "color": "#ca8a04",
       "properties": {
-        "account_identifier": { "type": "string", "description": "IBAN or account number used as the identifier.", "optional": false },
-        "bank_name": { "type": "string", "description": "Holding bank.", "optional": true },
-        "account_holder": { "type": "string", "description": "Named account holder.", "optional": true },
+        "account_identifier": {
+          "type": "string",
+          "description": "Account number without spaces or hyphens (123-456-789012 is written 123456789012), or an IBAN in its electronic form (DE89370400440532013000): digits and capital letters only. Half the account's identity, with bank_code.",
+          "optional": false,
+          "validator": { "regex": "^[0-9A-Z]{4,34}$" }
+        },
+        "bank_code": {
+          "type": "string",
+          "description": "The country's own bank code if it has one (Korea's three digits: 004 KB Kookmin, 088 Shinhan, 090 KakaoBank; a UK sort code; a US routing number), else the SWIFT/BIC (8 or 11 capitals). No spaces or hyphens; never the bank's name. Empty for an IBAN. Half the account's identity.",
+          "optional": true,
+          "validator": { "regex": "^(?:[0-9]{3,12}|[A-Z]{6}[A-Z0-9]{2}(?:[A-Z0-9]{3})?|[A-Z]{4}0[A-Z0-9]{6})$" }
+        },
+        "bank_name": { "type": "string", "description": "Holding bank's name, as shown. Identity uses bank_code, not this.", "optional": true },
+        "account_holder": {
+          "type": "string",
+          "description": "Name of the holder of record (Korea: 명의인). Often not who used the account: the holder may have sold or lent it, or had it opened in their name, so whoever operated it is a separate identity.person linked by an edge.",
+          "optional": true
+        },
         "country": { "type": "string", "description": "Country of the account.", "optional": true },
-        "currency": { "type": "string", "description": "Account currency (ISO 4217).", "optional": true }
+        "currency": { "type": "string", "description": "Account currency (ISO 4217).", "optional": true },
+        "fraud_registration": {
+          "type": "enum",
+          "description": "Whether the account is registered as used for fraud: in Korea, a fraud-use account (사기이용계좌) under the Telecommunications Financial Fraud Act. not_registered means checked and not found; released means registered once and since released. As of status_checked_at.",
+          "optional": true,
+          "enum": ["registered", "not_registered", "released"]
+        },
+        "payment_suspended_at": { "type": "datetime", "description": "When payments from the account were suspended (Korea: 지급정지).", "optional": true },
+        "report_channels": {
+          "type": "text",
+          "description": "Where the account was reported, one per line (e.g. 112, 1332 (FSS), the holding bank, ECRM, TheCheat).",
+          "optional": true
+        },
+        "status_checked_at": { "type": "datetime", "description": "When fraud_registration and payment_suspended_at were last confirmed.", "optional": true },
+        "status_source": {
+          "type": "string",
+          "description": "Who confirmed them: the holding bank, a police or FSS notice, a lookup service, a victim's report.",
+          "optional": true
+        }
       }
     }
   ]
