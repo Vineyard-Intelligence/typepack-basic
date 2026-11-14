@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "4.1.1",
+  "version": "4.2.0",
   "name": "Infrastructure",
   "summary": "Network-infrastructure and web OSINT entities (IPs, domains, URLs, hosts, ASNs, netblocks, DNS/WHOIS records, TLS certificates, SSH host keys, technologies, web fingerprints and tracking/ad-account identifiers) and their relationships.",
   "description": "Reach for it to map internet infrastructure during reconnaissance and to group sites built or run together. Relationships such as \"resolves to\" are edges in the project; a property that repeats a link as a plain value (`web.url.domain`, the `asn` of an IP address or netblock) does not link to the domain or AS node.\n\n- **Values.** `asn` is a bare integer (13335). A certificate is keyed by the SHA-256 of the DER certificate; an SSH host key by the SHA-256 of the public key blob as lowercase hex (the bytes behind OpenSSH's `SHA256:` fingerprint, in hex instead of base64).\n- **Fingerprints.** An HHHash is `hhh:1:` followed by the SHA-256 of the response header names in order, joined with `:` (https://github.com/adulau/HHHash). A favicon's `hash_value` is the Shodan-style MurmurHash3 as a signed decimal.\n- **Tracking IDs.** The value is kept exactly as the page carries it, with no `provider:` prefix. `provider` is a lower-case slug (`adsense`, `google_analytics`, or an ads.txt row's ad-system domain) and half the identity, so one issuer must always get one spelling.\n\n**Read results with care:** a tracking ID's `kind`s are not equally strong evidence, and its `source` ranks how hard it is to plant: `well_known` and `ads_txt` are files the domain owner must publish at a fixed path, a `meta_tag` verification token is nearly as strong, and `inline_script` is the weakest, since an injected tag lands there too.\n\n**Source:** https://github.com/Vineyard-Intelligence/typepack-basic (`typepacks/infrastructure.json`). Licence: Apache-2.0.",
@@ -627,6 +627,15 @@
           "validator": {
             "format": "sha256",
             "regex": "^[a-fA-F0-9]{64}$"
+          }
+        },
+        "fingerprint_sha1": {
+          "type": "hash",
+          "description": "SHA-1 fingerprint of the DER certificate, as lowercase hex. Blocklists such as abuse.ch SSLBL list certificates by this value, and it cannot be derived from the SHA-256.",
+          "optional": true,
+          "validator": {
+            "format": "sha1",
+            "regex": "^[a-fA-F0-9]{40}$"
           }
         },
         "subject_common_name": {
