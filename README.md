@@ -12,6 +12,11 @@ their properties. No code runs; a Type Pack is data.
 | Endpoint | `run.vineyard.typepacks.endpoint` | 6 |
 | Geospatial | `run.vineyard.typepacks.geo` | 3 |
 
+Cryptocurrency addresses, transactions and tokens are in their own pack,
+[`typepack-cryptocurrency`](https://github.com/Vineyard-Intelligence/typepack-cryptocurrency), which
+identifies them by network as well as by value. Financial keeps its two older crypto types for the
+nodes made before it.
+
 Each pack lives at `typepacks/<name>.json`. Clients fetch a pack from this repo at the commit
 the registry pins, e.g.
 `https://cdn.jsdelivr.net/gh/Vineyard-Intelligence/typepack-basic@<commit-sha>/typepacks/infrastructure.json`.
