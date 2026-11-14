@@ -1,10 +1,10 @@
 {
   "identifier": "run.vineyard.typepacks.identity",
   "content_type": "vineyard:typepack",
-  "version": "2.3.1",
+  "version": "2.4.0",
   "name": "Identity",
   "summary": "People, organizations, and the identities that connect them - personas, email addresses, phone numbers, PGP keys, and the accounts they hold on websites.",
-  "description": "Reach for it in persona and attribution work: the people and organisations behind an investigation, the names they go by before they are identified, and the addresses, numbers, website accounts and OpenPGP keys they hold. Who controls which account, address or key is an edge in the project.\n\n- **Names are identities.** A person is identified by `full_name` alone and an organisation by `name` alone, so two different people recorded under the same full name become one node. Further names go in `aliases`, one entry per name.\n- **Handle, account, person.** An account needs its `platform`: a username with no site is a handle. A handle's `actor_kind` records what it is believed to name, and `confidence` whether it is a meaningful entity rather than noise.\n- **PGP keys.** `fingerprint` is a v4 key's 40 hex digits or a v6 key's 64. `key_id` is the 16-hex long key ID: the last 16 of a v4 fingerprint, the first 16 of a v6 one (RFC 9580). `user_ids` holds one `Name <email>` per line, `sources` one key directory per line.\n\n**Source:** https://github.com/Vineyard-Intelligence/typepack-basic (`typepacks/identity.json`). Licence: Apache-2.0.",
+  "description": "Reach for it in persona and attribution work: the people and organisations behind an investigation, the names they go by before they are identified, and the addresses, numbers, website accounts and OpenPGP keys they hold. Who controls which account, address or key is an edge in the project.\n\n- **Names are identities.** A person is identified by `full_name` alone and an organisation by `name` alone, so two different people recorded under the same full name become one node. Further names go in `aliases`, one entry per name.\n- **Handle, account, person.** An account needs its `platform`: a username with no site is a handle. A handle's `actor_kind` records what it is believed to name, and `confidence` whether it is a meaningful entity rather than noise.\n- **PGP keys.** `fingerprint` is a v4 key's 40 hex digits or a v6 key's 64. `key_id` is the 16-hex long key ID: the last 16 of a v4 fingerprint, the first 16 of a v6 one (RFC 9580). `user_ids` holds one `Name <email>` per line, `sources` one key directory per line.\n- **Phone numbers.** A number is identified as written, so `+82 10-1234-5678` and `010-1234-5678` are two nodes. `e164` is the form they share once a pack has filled it. A `line_type` filled from the numbering plan is estimated from the range the number belongs to, not from subscriber records; one from a subscriber record or a carrier lookup can say otherwise.\n\n**Source:** https://github.com/Vineyard-Intelligence/typepack-basic (`typepacks/identity.json`). Licence: Apache-2.0.",
   "authors": [
     {
       "name": "VINEYARD",
@@ -144,22 +144,43 @@
       "category": "identity",
       "name": "phone_number",
       "display_name": "Phone Number",
-      "description": "A telephone number in E.164 or local form.",
+      "description": "A telephone number, identified as written (E.164 or local form). Two spellings of one number are two nodes; e164 is the value they share.",
       "label_property": "number",
       "icon": "phone",
       "color": "#fb7185",
       "properties": {
         "number": {
           "type": "string",
-          "description": "The phone number.",
+          "description": "The phone number as written.",
           "optional": false,
           "validator": {
             "regex": "^\\+?[0-9 ().-]{5,}$"
           }
         },
+        "e164": {
+          "type": "string",
+          "description": "The number in E.164 form: + and the country calling code and national number, no separators (+821012345678). Filled by a normaliser; two nodes with the same e164 are one number written two ways.",
+          "optional": true,
+          "validator": {
+            "regex": "^\\+[1-9][0-9]{1,14}$"
+          }
+        },
         "country_code": {
           "type": "string",
-          "description": "Dialing country code.",
+          "description": "Country calling code, digits only (82 for a +82 number).",
+          "optional": true
+        },
+        "region": {
+          "type": "string",
+          "description": "ISO 3166-1 alpha-2 code of the country or territory the number belongs to (KR, US). Several share one calling code: +1 is the US, Canada and others. Empty for non-geographic codes such as +800.",
+          "optional": true,
+          "validator": {
+            "regex": "^[A-Z]{2}$"
+          }
+        },
+        "country_code_inferred": {
+          "type": "boolean",
+          "description": "True when number has no leading + country code and was read as dialled from an assumed country (010-… as Korea), so country_code, region and e164 rest on that assumption.",
           "optional": true
         },
         "carrier": {
@@ -169,13 +190,21 @@
         },
         "line_type": {
           "type": "enum",
-          "description": "Type of line.",
+          "description": "Type of line. A value filled from the numbering plan is estimated from the range the number belongs to, not from subscriber records, so a ported or forwarded number can differ. fixed_or_mobile: the plan gives both the same ranges (+1). uan: one number for a whole organisation (Korea's 1588-…). personal_number: a number that follows its holder between lines (Korea's 050…).",
           "optional": true,
           "enum": [
             "mobile",
             "landline",
             "voip",
-            "unknown"
+            "unknown",
+            "fixed_or_mobile",
+            "toll_free",
+            "premium_rate",
+            "shared_cost",
+            "uan",
+            "personal_number",
+            "pager",
+            "voicemail"
           ]
         }
       }
