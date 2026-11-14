@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.identity",
   "content_type": "vineyard:typepack",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "name": "Identity",
   "summary": "People, organizations, and the identities that connect them - personas, email addresses, phone numbers, PGP keys, and the accounts they hold on websites.",
   "description": "Reach for it in persona and attribution work: the people and organisations behind an investigation, the names they go by before they are identified, and the addresses, numbers, website accounts and OpenPGP keys they hold. Who controls which account, address or key is an edge in the project.\n\n- **Names are identities.** A person is identified by `full_name` alone and an organisation by `name` alone, so two different people recorded under the same full name become one node. Further names go in `aliases`, one entry per name.\n- **Handle, account, person.** An account needs its `platform`: a username with no site is a handle. A handle's `actor_kind` records what it is believed to name, and `confidence` whether it is a meaningful entity rather than noise.\n- **PGP keys.** `fingerprint` is a v4 key's 40 hex digits or a v6 key's 64. `key_id` is the 16-hex long key ID: the last 16 of a v4 fingerprint, the first 16 of a v6 one (RFC 9580). `user_ids` holds one `Name <email>` per line, `sources` one key directory per line.\n- **Phone numbers.** A number is identified as written, so `+82 10-1234-5678` and `010-1234-5678` are two nodes. `e164` is the form they share once a pack has filled it. A `line_type` filled from the numbering plan is estimated from the range the number belongs to, not from subscriber records; one from a subscriber record or a carrier lookup can say otherwise.\n\n**Source:** https://github.com/Vineyard-Intelligence/typepack-basic (`typepacks/identity.json`). Licence: Apache-2.0.",
@@ -163,7 +163,8 @@
           "optional": true,
           "validator": {
             "regex": "^\\+[1-9][0-9]{1,14}$"
-          }
+          },
+          "duplicate_key": true
         },
         "country_code": {
           "type": "string",
