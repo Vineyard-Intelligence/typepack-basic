@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.threat",
   "content_type": "vineyard:typepack",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "name": "Threat",
   "summary": "Threat-intelligence entities (malware, campaigns, operations, vulnerabilities, threat actors, indicators, attack patterns, tools, detection signatures) and their relationships, aligned with STIX 2.1.",
   "description": "Reach for it to record an attack in STIX 2.1 terms: the software it used, who is believed to be behind it, the campaign and operation it belongs to, the weakness and technique it relies on, and how it is detected. \"Uses\", \"attributed to\" and every other relationship is an edge in the project.\n\n- **Names are identities.** Every type is identified by its label alone, so two nodes with the same name, CVE or indicator value are one entity. Further names go in `aliases` (malware, tool) or `known_aliases` (threat actor). A malware node needs `malware_type` as well as `name`, and `is_family` says whether it is a family or a single sample.\n- **Identifiers.** `cve_id` has the form `CVE-YYYY-NNNN` (four or more digits at the end) and `cwe_id` the form `CWE-<n>`. An attack pattern's `technique_id` is in ATT&CK form (`T1234` or `T1234.001`), and `tactic` is one of the 14 ATT&CK tactics.\n\n**Source:** https://github.com/Vineyard-Intelligence/typepack-basic (`typepacks/threat.json`). Licence: Apache-2.0.",
@@ -125,7 +125,8 @@
           "optional": false,
           "validator": {
             "regex": "^[a-fA-F0-9]{64}$"
-          }
+          },
+          "case_insensitive": true
         },
         "sha1": {
           "type": "hash",
@@ -133,7 +134,8 @@
           "optional": true,
           "validator": {
             "regex": "^[a-fA-F0-9]{40}$"
-          }
+          },
+          "case_insensitive": true
         },
         "md5": {
           "type": "hash",
@@ -141,7 +143,8 @@
           "optional": true,
           "validator": {
             "regex": "^[a-fA-F0-9]{32}$"
-          }
+          },
+          "case_insensitive": true
         },
         "size": {
           "type": "integer",
