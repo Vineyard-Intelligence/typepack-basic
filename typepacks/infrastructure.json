@@ -1,7 +1,7 @@
 {
   "identifier": "run.vineyard.typepacks.infrastructure",
   "content_type": "vineyard:typepack",
-  "version": "4.3.0",
+  "version": "4.3.1",
   "name": "Infrastructure",
   "summary": "Network-infrastructure and web OSINT entities (IPs, domains, URLs, hosts, ASNs, netblocks, DNS/WHOIS records, TLS certificates, SSH host keys, technologies, web fingerprints and tracking/ad-account identifiers) and their relationships.",
   "description": "Reach for it to map internet infrastructure during reconnaissance and to group sites built or run together. Relationships such as \"resolves to\" are edges in the project; a property that repeats a link as a plain value (`web.url.domain`, the `asn` of an IP address or netblock) does not link to the domain or AS node.\n\n- **Values.** `asn` is a bare integer (13335). A certificate is keyed by the SHA-256 of the DER certificate; an SSH host key by the SHA-256 of the public key blob as lowercase hex (the bytes behind OpenSSH's `SHA256:` fingerprint, in hex instead of base64).\n- **Fingerprints.** An HHHash is `hhh:1:` followed by the SHA-256 of the response header names in order, joined with `:` (https://github.com/adulau/HHHash). A favicon's `hash_value` is the Shodan-style MurmurHash3 as a signed decimal.\n- **Tracking IDs.** The value is kept exactly as the page carries it, with no `provider:` prefix. `provider` is a lower-case slug (`adsense`, `google_analytics`, or an ads.txt row's ad-system domain) and half the identity, so one issuer must always get one spelling.\n\n**Read results with care:** a tracking ID's `kind`s are not equally strong evidence, and its `source` ranks how hard it is to plant: `well_known` and `ads_txt` are files the domain owner must publish at a fixed path, a `meta_tag` verification token is nearly as strong, and `inline_script` is the weakest, since an injected tag lands there too.\n\n**Source:** https://github.com/Vineyard-Intelligence/typepack-basic (`typepacks/infrastructure.json`). Licence: Apache-2.0.",
@@ -26,7 +26,7 @@
       "properties": {
         "ip_address": {
           "type": "ip",
-          "description": "The IP address in dotted-quad (IPv4) or colon-hex (IPv6) form. Compared in its standard form: IPv6 as RFC 5952 writes it (2001:db8::1), IPv4 without the zero padding of a fixed-width 192.000.002.001; other leading zeros are compared as written, since they may be octal.",
+          "description": "The IP address in dotted-quad (IPv4) or colon-hex (IPv6) form. Compared in its standard form: IPv6 as RFC 5952 writes it (2001:db8::1), IPv4 without the zero padding of a fixed-width 192.000.002.001 where each padded part reads the same in octal and decimal (000 to 007). Any other leading zero, such as the 010 in 010.001.002.003, is compared as written, since browsers read it as octal.",
           "optional": false,
           "validator": {
             "format": "ip"
@@ -86,7 +86,7 @@
           "description": "The fully qualified domain name. Underscored labels (_dmarc, _domainkey, _acme-challenge, _tcp) are ordinary names here — RFC 8552 reserves them for service metadata and passive-DNS sources return them constantly. Compared without a trailing dot and in punycode, so Bücher.de. and xn--bcher-kva.de are one domain.",
           "optional": false,
           "validator": {
-            "regex": "^[a-zA-Z0-9._\\u0080-\\uffff-]+\\.(?:[a-zA-Z\\u0080-\\uffff]{2,}|xn--[a-zA-Z0-9-]{2,})\\.?$"
+            "regex": "^[a-zA-Z0-9._\\u0080-\\uffff-]+\\.(?:[a-zA-Z\\u0080-\\uffff]{2,}|[xX][nN]--[a-zA-Z0-9-]{2,})\\.?$"
           },
           "case_insensitive": true,
           "normalize": "hostname"
