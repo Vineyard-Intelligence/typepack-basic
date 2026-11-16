@@ -8,14 +8,14 @@ their properties. No code runs; a Type Pack is data.
 | Infrastructure | `run.vineyard.typepacks.infrastructure` | 15 |
 | Threat | `run.vineyard.typepacks.threat` | 10 |
 | Identity | `run.vineyard.typepacks.identity` | 7 |
-| Financial | `run.vineyard.typepacks.financial` | 4 |
+| Financial | `run.vineyard.typepacks.financial` | 2 |
 | Endpoint | `run.vineyard.typepacks.endpoint` | 6 |
 | Geospatial | `run.vineyard.typepacks.geo` | 3 |
 
 Cryptocurrency addresses, transactions and tokens are in their own pack,
 [`typepack-cryptocurrency`](https://github.com/Vineyard-Intelligence/typepack-cryptocurrency), which
-identifies them by network as well as by value. Financial keeps its two older crypto types for the
-nodes made before it.
+identifies them by network as well as by value. Financial's own two crypto types, which identified
+an address or a transaction by its string alone, were removed in Financial 3.0.0.
 
 Each pack lives at `typepacks/<name>.json`. Clients fetch a pack from this repo at the commit
 the registry pins, e.g.

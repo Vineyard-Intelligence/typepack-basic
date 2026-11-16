@@ -1,57 +1,15 @@
 {
   "identifier": "run.vineyard.typepacks.financial",
   "content_type": "vineyard:typepack",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "name": "Financial",
-  "summary": "Follow-the-money entities: bank accounts with their fraud-report status, exchanges and other virtual-asset service providers, and the legacy cryptocurrency address and transaction types. Public identifiers only — no keys, PANs, or credentials.",
-  "description": "Reach for it to trace funds through bank accounts, such as the mule accounts a fraud case pays into, and through exchanges and other virtual-asset service providers. Cryptocurrency addresses and transactions belong to the Cryptocurrency pack, which tells networks apart; this pack's `crypto_address` and `crypto_transaction` remain only for nodes made before it.\n\n- **Public identifiers only.** No property holds a private key, a card number (PAN) or a credential.\n- **Exchanges.** `exchange` is any service that holds customers' funds: an exchange, an OTC desk, a custodial wallet, a payment processor. The Cryptocurrency pack's `crypto_service` is for the ones that do not.\n- **Bank accounts.** One is identified by bank code and account number together: the same number at two banks is two accounts. Write both without spaces or hyphens, and the bank as its code, not its name; an IBAN takes no bank code. One recorded before 2.0.0 has no bank code and does not merge with new writes of it. Fraud registration and payment suspension hold as of `status_checked_at`, and a registration can be released later. The holder of record is often not whoever used the account.\n- **Other types** are identified by their label alone, as written, case included.\n- **Units.** `balance`, `amount` and `fee` are in the asset's native unit; a bank account's `currency` is an ISO 4217 code.\n\n**Source:** https://github.com/Vineyard-Intelligence/typepack-basic (`typepacks/financial.json`). Licence: Apache-2.0.",
+  "summary": "Follow-the-money entities: bank accounts with their fraud-report status, and exchanges and other virtual-asset service providers. Public identifiers only — no keys, PANs, or credentials.",
+  "description": "Reach for it to trace funds through bank accounts, such as the mule accounts a fraud case pays into, and through exchanges and other virtual-asset service providers. Cryptocurrency addresses and transactions belong to the Cryptocurrency pack, which tells networks apart.\n\n- **Public identifiers only.** No property holds a private key, a card number (PAN) or a credential.\n- **Exchanges.** `exchange` is any service that holds customers' funds: an exchange, an OTC desk, a custodial wallet, a payment processor. The Cryptocurrency pack's `crypto_service` is for the ones that do not. One is identified by its name alone, as written, case included.\n- **Bank accounts.** One is identified by bank code and account number together: the same number at two banks is two accounts. Write both without spaces or hyphens, and the bank as its code, not its name; an IBAN takes no bank code. One recorded before 2.0.0 has no bank code and does not merge with new writes of it. Fraud registration and payment suspension hold as of `status_checked_at`, and a registration can be released later. The holder of record is often not whoever used the account. Its `currency` is an ISO 4217 code.\n\n**Source:** https://github.com/Vineyard-Intelligence/typepack-basic (`typepacks/financial.json`). Licence: Apache-2.0.",
   "authors": [{ "name": "VINEYARD", "url": "https://vineyard.run" }],
   "license": "Apache-2.0",
   "marketing_url": "https://vineyard.run/typepacks/financial",
   "thumbnail_url": "https://vineyard.run/typepacks/financial/icon.png",
   "types": [
-    {
-      "category": "financial",
-      "name": "crypto_address",
-      "display_name": "Crypto Address (legacy)",
-      "description": "Legacy type: a cryptocurrency address identified by its string alone, whatever the chain. New nodes are the Cryptocurrency pack's crypto_address, identified by network and address.",
-      "label_property": "address",
-      "icon": "wallet",
-      "color": "#f59e0b",
-      "properties": {
-        "address": { "type": "string", "description": "The public wallet address.", "optional": false },
-        "currency": {
-          "type": "enum",
-          "description": "Asset / chain.",
-          "optional": true,
-          "enum": ["btc", "eth", "xmr", "usdt", "trx", "ltc", "bnb", "sol", "other"]
-        },
-        "balance": { "type": "number", "description": "Observed balance, in the native unit.", "optional": true, "validator": { "min": 0 } },
-        "owner_label": { "type": "string", "description": "Attribution tag (e.g. exchange, mixer, known actor).", "optional": true },
-        "first_seen": { "type": "datetime", "description": "First observed activity.", "optional": true }
-      }
-    },
-    {
-      "category": "financial",
-      "name": "crypto_transaction",
-      "display_name": "Crypto Transaction (legacy)",
-      "description": "Legacy type: an on-chain transaction identified by its hash alone, whatever the chain. New nodes are the Cryptocurrency pack's crypto_transaction, identified by network and hash.",
-      "label_property": "tx_hash",
-      "icon": "arrow-left-right",
-      "color": "#fbbf24",
-      "properties": {
-        "tx_hash": { "type": "hash", "description": "The transaction hash / id.", "optional": false },
-        "currency": {
-          "type": "enum",
-          "description": "Asset / chain.",
-          "optional": true,
-          "enum": ["btc", "eth", "xmr", "usdt", "trx", "ltc", "bnb", "sol", "other"]
-        },
-        "amount": { "type": "number", "description": "Transferred amount, in the native unit.", "optional": true, "validator": { "min": 0 } },
-        "fee": { "type": "number", "description": "Network fee paid.", "optional": true, "validator": { "min": 0 } },
-        "timestamp": { "type": "datetime", "description": "Block / confirmation time.", "optional": true }
-      }
-    },
     {
       "category": "financial",
       "name": "exchange",
